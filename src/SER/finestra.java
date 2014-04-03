@@ -2,79 +2,115 @@ package SER;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
 
 public class finestra extends javax.swing.JFrame {
     
     private char[] tecles;
-    
-    private JButton copiaBoto(String text,Point position,Dimension size,ActionListener action){
-        JButton comp = new JButton(text);
-        comp.setText(text);
-        comp.setSize(size);
-        comp.setLocation(position);
-        comp.addActionListener(action);
-        return comp;
-    }
 
     public finestra() {
-        tecles = new char []{'W','E','R','T','Y'};
+        Tecla.defaultSize = new Dimension(40, 40);
+        Tecla.defaultAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Tecla tecla = (Tecla)(ae.getSource());
+                //Stub envio tecla
+                System.out.println(tecla.getContent());
+                Point location = tecla.getLocation();        
+                location.y += tecla.getHeight();
+                tecla.setLocation(location);
+            }
+        };
+        tecles = new char []{'Q','W','E','R','T','Y','U','I','O','P'};
         initComponents();
-        Dimension dim = jButton1.getSize();
-        Point base = jButton1.getLocation();
-        Point posicio = new Point(base);
-        ActionListener al = jButton1.getActionListeners()[0];
+        Point posicio = new Point(0,0);
         Tecla t;
         for (int i = 0; i < tecles.length; i++) {
-            posicio.x+=(dim.width + 1);
-            t = new Tecla(""+tecles[i], dim, posicio, tecles[i], al);
-            this.add(t);
-        }
-        
+            t = new Tecla(""+tecles[i],null, posicio, tecles[i],null);
+            posicio.x+=(Tecla.defaultSize.width);
+            teclat.add(t);
+        }        
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        teclat = new javax.swing.JPanel();
+        trackpad = new javax.swing.JPanel();
+        tauletaGrafica = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("Q");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boto(evt);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
             }
         });
+
+        jTabbedPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
+        teclat.setLayout(teclatLayout);
+        teclatLayout.setHorizontalGroup(
+            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
+        );
+        teclatLayout.setVerticalGroup(
+            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 262, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Teclat", teclat);
+
+        javax.swing.GroupLayout trackpadLayout = new javax.swing.GroupLayout(trackpad);
+        trackpad.setLayout(trackpadLayout);
+        trackpadLayout.setHorizontalGroup(
+            trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
+        );
+        trackpadLayout.setVerticalGroup(
+            trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 262, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Trackpad", trackpad);
+
+        javax.swing.GroupLayout tauletaGraficaLayout = new javax.swing.GroupLayout(tauletaGrafica);
+        tauletaGrafica.setLayout(tauletaGraficaLayout);
+        tauletaGraficaLayout.setHorizontalGroup(
+            tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
+        );
+        tauletaGraficaLayout.setVerticalGroup(
+            tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 262, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Tauleta gràfica", tauletaGrafica);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 361, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 260, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void boto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boto
-        Tecla tecla = (Tecla)(evt.getSource());
-        //Stub envio tecla
-        System.out.println(tecla.getContent());
-        Point location = tecla.getLocation();        
-        location.y += tecla.getHeight();
-        tecla.setLocation(location);
-    }//GEN-LAST:event_boto
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        System.out.println(evt.getKeyChar());
+    }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) and display of the window">
@@ -108,6 +144,9 @@ public class finestra extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel tauletaGrafica;
+    private javax.swing.JPanel teclat;
+    private javax.swing.JPanel trackpad;
     // End of variables declaration//GEN-END:variables
 }
