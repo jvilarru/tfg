@@ -7,9 +7,51 @@ import javax.swing.JButton;
 
 public class Tecla extends JButton{
     
-    private final char content;
+    private char content;
     public static ActionListener defaultAction;
     public static Dimension defaultSize;
+    
+    private char altContent;
+
+    public char getAltContent() {
+        return altContent;
+    }
+
+    public void setAltContent(char altContent) {
+        this.altContent = altContent;
+    }
+
+    
+    private char shiftContent;
+
+    public char getShiftContent() {
+        return shiftContent;
+    }
+
+    public void setShiftContent(char content) {
+        this.shiftContent = content;
+    }
+    
+    private String altTitle;
+
+    public String getAltTitle() {
+        return altTitle;
+    }
+
+    public void setAltTitle(String altTitle) {
+        this.altTitle = altTitle;
+    }
+
+
+    private String shiftTitle;
+
+    public String getShiftTitle() {
+        return shiftTitle;
+    }
+
+    public void setShiftTitle(String shiftTitle) {
+        this.shiftTitle = shiftTitle;
+    }
 
 
     public Tecla(String text, Dimension size, Point position, char content,ActionListener listener) {

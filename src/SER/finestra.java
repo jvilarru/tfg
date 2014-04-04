@@ -4,10 +4,15 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class finestra extends javax.swing.JFrame {
     
     private char[] tecles;
+    private final String defaultLayout = "layoutES.ser";
 
     public finestra() {
         Tecla.defaultSize = new Dimension(40, 40);
@@ -24,13 +29,17 @@ public class finestra extends javax.swing.JFrame {
         };
         tecles = new char []{'Q','W','E','R','T','Y','U','I','O','P'};
         initComponents();
-        Point posicio = new Point(0,0);
-        Tecla t;
-        for (int i = 0; i < tecles.length; i++) {
-            t = new Tecla(""+tecles[i],null, posicio, tecles[i],null);
-            posicio.x+=(Tecla.defaultSize.width);
-            teclat.add(t);
-        }        
+        String str;
+        str = "º,ª,\\,1,2,3";
+        String[] splited = str.split(",");
+        
+//        Point posicio = new Point(0,0);
+//        Tecla t;
+//        for (int i = 0; i < tecles.length; i++) {
+//            t = new Tecla(""+tecles[i],null, posicio, tecles[i],null);
+//            posicio.x+=(Tecla.defaultSize.width);
+//            teclat.add(t);
+//        }        
     }
 
     @SuppressWarnings("unchecked")
@@ -50,6 +59,12 @@ public class finestra extends javax.swing.JFrame {
         });
 
         jTabbedPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
+
+        teclat.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
             }
@@ -109,7 +124,7 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        System.out.println(evt.getKeyChar());
+        System.out.print(evt.getKeyChar());
     }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
