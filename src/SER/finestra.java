@@ -4,14 +4,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class finestra extends javax.swing.JFrame {
     
-    private char[] tecles;
     private final String defaultLayout = "layoutES.ser";
 
     public finestra() {
@@ -22,24 +17,16 @@ public class finestra extends javax.swing.JFrame {
                 Tecla tecla = (Tecla)(ae.getSource());
                 //Stub envio tecla
                 System.out.println(tecla.getContent());
-                Point location = tecla.getLocation();        
-                location.y += tecla.getHeight();
-                tecla.setLocation(location);
             }
         };
-        tecles = new char []{'Q','W','E','R','T','Y','U','I','O','P'};
         initComponents();
-        String str;
-        str = "º,ª,\\,1,2,3";
-        String[] splited = str.split(",");
-        
-//        Point posicio = new Point(0,0);
-//        Tecla t;
-//        for (int i = 0; i < tecles.length; i++) {
-//            t = new Tecla(""+tecles[i],null, posicio, tecles[i],null);
-//            posicio.x+=(Tecla.defaultSize.width);
-//            teclat.add(t);
-//        }        
+        String parse [] = new String []{"q,Q,@,q,Q,@","w,W,ł,w,W,ł"};
+        Tecla t[] = new Tecla[parse.length];
+        for (int i=0;i<parse.length;i++) {
+            t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width*i,0), null);
+            teclat.add(t[i]);
+            System.out.println(t[i].getText()+" added");
+        }        
     }
 
     @SuppressWarnings("unchecked")
