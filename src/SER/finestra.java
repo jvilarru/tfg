@@ -22,11 +22,15 @@ public class finestra extends javax.swing.JFrame {
         initComponents();
         String parse [] = new String []{"q,Q,@,q,Q,@","w,W,ł,w,W,ł"};
         Tecla t[] = new Tecla[parse.length];
-        for (int i=0;i<parse.length;i++) {
+        Dimension d = new Dimension(Tecla.defaultSize.width*2,Tecla.defaultSize.height*2);
+        int i;
+        for (i=0;i<parse.length;i++) {
             t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width*i,0), null);
             teclat.add(t[i]);
-            System.out.println(t[i].getText()+" added");
-        }        
+        }
+        String parseEnter = "Enter,Enter,Enter,\n,\n,\n";
+        Enter intro = new Enter(parseEnter,d , new Point(Tecla.defaultSize.width*i,0), null, new Point(Tecla.defaultSize.width*i+Tecla.defaultSize.width,Tecla.defaultSize.height));
+        teclat.add(intro);
     }
 
     @SuppressWarnings("unchecked")
@@ -45,17 +49,14 @@ public class finestra extends javax.swing.JFrame {
             }
         });
 
+        jTabbedPane1.setName("teclat"); // NOI18N
         jTabbedPane1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
             }
         });
 
-        teclat.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
+        teclat.setName("teclat"); // NOI18N
 
         javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
         teclat.setLayout(teclatLayout);
@@ -106,6 +107,8 @@ public class finestra extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName("Teclat");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

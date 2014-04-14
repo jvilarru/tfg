@@ -7,8 +7,8 @@ import java.awt.Point;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class Tecla extends JButton{
-    
+public class Tecla extends JButton {
+
     private char content;
     private String title;
     public static ActionListener defaultAction;
@@ -21,14 +21,18 @@ public class Tecla extends JButton{
     private String shiftTitle;
     public static boolean controlPressed = false;
     public static boolean shiftPressed = false;
-    public static boolean alTPressed  = false;
+    public static boolean alTPressed = false;
 
-
-    public Tecla(String lineToParse, Dimension size, Point position,ActionListener listener) {
-        if(listener == null) listener = defaultAction;
+    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener) {
+        if (listener == null) {
+            listener = defaultAction;
+        }
         this.addActionListener(listener);
-        if(size == null) this.size=defaultSize;
-        else this.size=size;
+        if (size == null) {
+            this.size = defaultSize;
+        } else {
+            this.size = size;
+        }
         this.setSize(this.size);
         this.position = position;
         this.setLocation(position);
@@ -41,26 +45,19 @@ public class Tecla extends JButton{
         shiftContent = splited[4].charAt(0);
         altContent = splited[5].charAt(0);
     }
-    
+
     @Override
-    public void paintComponent(Graphics g){
-//        super.paintComponent(g);
-//        g.setColor(Color.yellow);
-        Color c = g.getColor();
-        if (content!='q')
-            g.setColor(Color.yellow);
-        else{
-            g.setColor(Color.blue);
-        }
-        g.fillRect(position.x, position.y, size.width, size.height);
-        g.setColor(c);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
     }
 
     public String getContent() {
-        if(Tecla.alTPressed)
-            return ""+altContent;
-        if(Tecla.shiftPressed)
-            return ""+shiftContent;
-        return ""+content;
+        if (Tecla.alTPressed) {
+            return "" + altContent;
+        }
+        if (Tecla.shiftPressed) {
+            return "" + shiftContent;
+        }
+        return "" + content;
     }
 }
