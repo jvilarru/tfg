@@ -36,6 +36,7 @@ public class Tecla extends JButton {
         this.setSize(this.size);
         this.position = position;
         this.setLocation(position);
+        setFocusable(false);
         String[] splited = lineToParse.split(",");
         this.setText(splited[0]);
         title = splited[0];
@@ -45,9 +46,19 @@ public class Tecla extends JButton {
         shiftContent = splited[4].charAt(0);
         altContent = splited[5].charAt(0);
     }
+    
+    public void modifierKey(){
+        if(Tecla.shiftPressed)
+            setText(shiftTitle);
+        else if(Tecla.alTPressed)
+            setText(altTitle);
+        else
+            setText(title);
+    }
 
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
     }
 

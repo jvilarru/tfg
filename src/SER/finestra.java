@@ -16,21 +16,18 @@ public class finestra extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent ae) {
                 Tecla tecla = (Tecla)(ae.getSource());
                 //Stub envio tecla
+                //TODO: ferho com a part de la clase Tecla?
                 System.out.println(tecla.getContent());
             }
         };
         initComponents();
         String parse [] = new String []{"q,Q,@,q,Q,@","w,W,ł,w,W,ł"};
         Tecla t[] = new Tecla[parse.length];
-        Dimension d = new Dimension(Tecla.defaultSize.width*2,Tecla.defaultSize.height*2);
         int i;
         for (i=0;i<parse.length;i++) {
             t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width*i,0), null);
             teclat.add(t[i]);
         }
-        String parseEnter = "Enter,Enter,Enter,\n,\n,\n";
-        Enter intro = new Enter(parseEnter,d , new Point(Tecla.defaultSize.width*i,0), null, new Point(Tecla.defaultSize.width*i+Tecla.defaultSize.width,Tecla.defaultSize.height));
-        teclat.add(intro);
     }
 
     @SuppressWarnings("unchecked")
@@ -49,12 +46,8 @@ public class finestra extends javax.swing.JFrame {
             }
         });
 
+        jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("teclat"); // NOI18N
-        jTabbedPane1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
 
         teclat.setName("teclat"); // NOI18N
 
@@ -114,7 +107,10 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        System.out.print(evt.getKeyChar());
+        if(evt.getComponent().equals(teclat))
+            System.out.print(evt.getKeyChar());
+        else
+            System.out.println(evt.getSource().toString());
     }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
