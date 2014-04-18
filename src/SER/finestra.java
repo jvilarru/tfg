@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class finestra extends javax.swing.JFrame {
-    
+
     private final String defaultLayout = "layoutES.ser";
 
     public finestra() {
@@ -14,20 +14,22 @@ public class finestra extends javax.swing.JFrame {
         Tecla.defaultAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Tecla tecla = (Tecla)(ae.getSource());
+                Tecla tecla = (Tecla) (ae.getSource());
                 //Stub envio tecla
                 //TODO: ferho com a part de la clase Tecla?
                 System.out.println(tecla.getContent());
             }
         };
         initComponents();
-        String parse [] = new String []{"q,Q,@,q,Q,@","w,W,ł,w,W,ł"};
+        String parse[] = new String[]{"q,Q,@,q,Q,@", "w,W,ł,w,W,ł"};
         Tecla t[] = new Tecla[parse.length];
         int i;
-        for (i=0;i<parse.length;i++) {
-            t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width*i,0), null);
+        for (i = 0; i < parse.length; i++) {
+            t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width * i, 0), null);
             teclat.add(t[i]);
         }
+        teclat.setFocusable(true);
+        teclat.requestFocusInWindow();
     }
 
     @SuppressWarnings("unchecked")
@@ -40,16 +42,16 @@ public class finestra extends javax.swing.JFrame {
         tauletaGrafica = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
 
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("teclat"); // NOI18N
 
         teclat.setName("teclat"); // NOI18N
+        teclat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teclatKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
         teclat.setLayout(teclatLayout);
@@ -106,12 +108,11 @@ public class finestra extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        if(evt.getComponent().equals(teclat))
-            System.out.print(evt.getKeyChar());
-        else
-            System.out.println(evt.getSource().toString());
-    }//GEN-LAST:event_formKeyPressed
+    private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
+        System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
+//        if(evt.getSource().equals(teclat))
+//            System.out.println("yupi");
+    }//GEN-LAST:event_teclatKeyPressed
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) and display of the window">
@@ -141,7 +142,7 @@ public class finestra extends javax.swing.JFrame {
             }
         });
         //</editor-fold>
-    
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
