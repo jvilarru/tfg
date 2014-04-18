@@ -30,6 +30,8 @@ public class finestra extends javax.swing.JFrame {
         }
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
+        teclat.setFocusTraversalKeysEnabled(false);
+//        KeyForwarder keyForwarder = new KeyForwarder();
     }
 
     @SuppressWarnings("unchecked")
