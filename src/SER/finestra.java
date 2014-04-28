@@ -2,15 +2,35 @@ package SER;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class finestra extends javax.swing.JFrame {
-
+    public static final int NUM_TECLES = 17;
     private final String defaultLayout = "layoutES.ser";
+    private Tecla[] tecles;
+    
+    public void posaTecles(){
+        
+    }
+    public finestra() throws FileNotFoundException, IOException {
 
-    public finestra() {
-        Tecla.defaultSize = new Dimension(40, 40);
+        initComponents();
+        //<editor-fold defaultstate="collapsed" desc="Inicialitzacio dels valors per defecte de les tecles">
+        //TODO ferho en funcio de la pantalla la seguent instruccio es la clau 
+        //per a aixo, tambe ens haurem de preocupar per el tamany de la lletra
+        //i per si ens redimensionen la finestra
+        Rectangle bounds = teclat.getBounds();
+        Tecla.defaultSize = new Dimension[6];
+        Tecla.defaultSize[0] = new Dimension(bounds.width/17, 40);
+        //fi-TODO
         Tecla.defaultAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -20,18 +40,19 @@ public class finestra extends javax.swing.JFrame {
                 System.out.println(tecla.getContent());
             }
         };
-        initComponents();
-        String parse[] = new String[]{"q,Q,@,q,Q,@", "w,W,ł,w,W,ł"};
-        Tecla t[] = new Tecla[parse.length];
+        //</editor-fold>
+        tecles = new Tecla[NUM_TECLES];
+        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
         int i;
-        for (i = 0; i < parse.length; i++) {
-            t[i] = new Tecla(parse[i], null, new Point(Tecla.defaultSize.width * i, 0), null);
-            teclat.add(t[i]);
+        int row=0;
+        for (i = 0; i < NUM_TECLES; i++) {
+            tecles[i] = new Tecla(br.readLine(), null, new Point(Tecla.defaultSize[row].width * i, 0), null,row);
+            teclat.add(tecles[i]);
         }
+        br.close();
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
-//        KeyForwarder keyForwarder = new KeyForwarder();
     }
 
     @SuppressWarnings("unchecked")
@@ -111,6 +132,7 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
+        //de moment aixono cal
         System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
 //        if(evt.getSource().equals(teclat))
 //            System.out.println("yupi");
@@ -128,19 +150,19 @@ public class finestra extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new finestra().setVisible(true);
+                try {
+                    new finestra().setVisible(true);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         //</editor-fold>

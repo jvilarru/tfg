@@ -12,7 +12,7 @@ public class Tecla extends JButton {
     private char content;
     private String title;
     public static ActionListener defaultAction;
-    public static Dimension defaultSize;
+    public static Dimension defaultSize[];
     private Point position;
     private Dimension size;
     private char shiftContent;
@@ -23,13 +23,13 @@ public class Tecla extends JButton {
     public static boolean shiftPressed = false;
     public static boolean alTPressed = false;
 
-    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener) {
+    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener,int row) {
         if (listener == null) {
             listener = defaultAction;
         }
         this.addActionListener(listener);
         if (size == null) {
-            this.size = defaultSize;
+            this.size = defaultSize[row];
         } else {
             this.size = size;
         }
