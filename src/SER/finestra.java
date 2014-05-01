@@ -66,11 +66,16 @@ public class finestra extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         teclat = new javax.swing.JPanel();
         trackpad = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         tauletaGrafica = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
@@ -104,15 +109,25 @@ public class finestra extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Teclat", teclat);
 
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jButton3, org.jdesktop.beansbinding.ELProperty.create("${preferredSize}"), jButton2, org.jdesktop.beansbinding.BeanProperty.create("preferredSize"));
+        bindingGroup.addBinding(binding);
+
         javax.swing.GroupLayout trackpadLayout = new javax.swing.GroupLayout(trackpad);
         trackpad.setLayout(trackpadLayout);
         trackpadLayout.setHorizontalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1212, Short.MAX_VALUE)
+            .addGroup(trackpadLayout.createSequentialGroup()
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
         );
         trackpadLayout.setVerticalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGroup(trackpadLayout.createSequentialGroup()
+                .addGap(0, 389, Short.MAX_VALUE)
+                .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("Trackpad", trackpad);
@@ -121,11 +136,18 @@ public class finestra extends javax.swing.JFrame {
         tauletaGrafica.setLayout(tauletaGraficaLayout);
         tauletaGraficaLayout.setHorizontalGroup(
             tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1212, Short.MAX_VALUE)
+            .addGroup(tauletaGraficaLayout.createSequentialGroup()
+                .addGroup(tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 1163, Short.MAX_VALUE))
         );
         tauletaGraficaLayout.setVerticalGroup(
             tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGroup(tauletaGraficaLayout.createSequentialGroup()
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.addTab("Tauleta gràfica", tauletaGrafica);
@@ -184,6 +206,8 @@ public class finestra extends javax.swing.JFrame {
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Teclat");
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -236,6 +260,10 @@ public class finestra extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSlider jSlider1;
@@ -243,5 +271,6 @@ public class finestra extends javax.swing.JFrame {
     private javax.swing.JPanel tauletaGrafica;
     private javax.swing.JPanel teclat;
     private javax.swing.JPanel trackpad;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
