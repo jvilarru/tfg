@@ -1,6 +1,5 @@
 package SER;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -8,13 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class Tecla extends JButton {
-    
     public static boolean controlPressed = false;
     public static boolean shiftPressed = false;
     public static boolean alTPressed = false;
     
     public static ActionListener defaultAction;
-    public static Dimension defaultSize;
+    public static Dimension defaultSize[];
 
     private char content;
     private char shiftContent;
@@ -27,13 +25,13 @@ public class Tecla extends JButton {
     private Point position;
     private Dimension size;
 
-    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener) {
+    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener,int row) {
         if (listener == null) {
             listener = defaultAction;
         }
         this.addActionListener(listener);
         if (size == null) {
-            this.size = defaultSize;
+            this.size = defaultSize[row];
         } else {
             this.size = size;
         }
