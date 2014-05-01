@@ -2,8 +2,8 @@ package SER;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -25,15 +25,10 @@ public class finestra extends javax.swing.JFrame {
     public finestra() throws FileNotFoundException, IOException {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Tecla.defaultSize = new Dimension[4];
-        Tecla.defaultSize[0] = new Dimension(40, 40);
         //<editor-fold defaultstate="collapsed" desc="Inicialitzacio dels valors per defecte de les tecles">
         //TODO ferho en funcio de la pantalla la seguent instruccio es la clau 
         //per a aixo, tambe ens haurem de preocupar per el tamany de la lletra
         //i per si ens redimensionen la finestra
-        Rectangle bounds = teclat.getBounds();
-        Tecla.defaultSize = new Dimension[6];
-        Tecla.defaultSize[0] = new Dimension(bounds.width/17, 40);
         //fi-TODO
         Tecla.defaultAction = new ActionListener() {
             @Override
@@ -46,10 +41,10 @@ public class finestra extends javax.swing.JFrame {
         };
         this.setUndecorated(true);
         initComponents();
+        Rectangle bounds = teclat.getBounds();
+        Tecla.defaultSize = new Dimension[6];
+        Tecla.defaultSize[0] = new Dimension(screenSize.width / NUM_TECLES, 40);
         this.setSize(screenSize);        
-        
-        String parse[] = new String[]{"q,Q,@,q,Q,@", "w,W,ł,w,W,ł"};
-        tecles = new Tecla[parse.length];
 
         //</editor-fold>
         tecles = new Tecla[NUM_TECLES];
@@ -194,7 +189,7 @@ public class finestra extends javax.swing.JFrame {
 
     private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
         //de moment aixono cal
-        System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
+//        System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
 //        if(evt.getSource().equals(teclat))
 //            System.out.println("yupi");
     }//GEN-LAST:event_teclatKeyPressed
