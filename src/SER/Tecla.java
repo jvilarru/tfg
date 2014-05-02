@@ -3,10 +3,11 @@ package SER;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class Tecla extends JButton {
+public class Tecla extends JButton implements ActionListener {
     public static boolean controlPressed = false;
     public static boolean shiftPressed = false;
     public static boolean alTPressed = false;
@@ -25,20 +26,12 @@ public class Tecla extends JButton {
     private Point position;
     private Dimension size;
 
-    public Tecla(String lineToParse, Dimension size, Point position, ActionListener listener,int row) {
-        if (listener == null) {
-            listener = defaultAction;
-        }
-        this.addActionListener(listener);
-        if (size == null) {
-            this.size = defaultSize[row];
-        } else {
-            this.size = size;
-        }
-        this.setSize(this.size);
-        this.position = position;
-        this.setLocation(position);
+    public Tecla(String lineToParse,int row) {
+        addActionListener(this);
         setFocusable(false);
+        if (lineToParse.matches("*\\*")) {
+
+        }
         String[] splited = lineToParse.split(",");
         title = splited[0];
         shiftTitle = splited[1];
@@ -72,5 +65,11 @@ public class Tecla extends JButton {
             return "" + shiftContent;
         }
         return "" + content;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //TODO fer algo mes
+        System.out.println(content);
     }
 }

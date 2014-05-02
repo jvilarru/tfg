@@ -1,66 +1,76 @@
 package SER;
 
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class finestra extends javax.swing.JFrame {
-    public static final int NUM_TECLES = 17;
+
     private final String defaultLayout = "layoutES.ser";
     private Tecla tecles[];
-    
-    public void posaTecles(){
-        
-    }
-    public finestra() throws FileNotFoundException, IOException {
 
+    public void posaTecles() {
+
+    }
+
+    public finestra() throws FileNotFoundException, IOException {
+        ArrayList<ArrayList<String>> matriu = new ArrayList<>();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         //<editor-fold defaultstate="collapsed" desc="Inicialitzacio dels valors per defecte de les tecles">
         //TODO ferho en funcio de la pantalla la seguent instruccio es la clau 
         //per a aixo, tambe ens haurem de preocupar per el tamany de la lletra
         //i per si ens redimensionen la finestra
         //fi-TODO
-        Tecla.defaultAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                Tecla tecla = (Tecla) (ae.getSource());
-                //Stub envio tecla
-                //TODO: ferho com a part de la clase Tecla?
-                System.out.println(tecla.getContent());
-            }
-        };
         this.setUndecorated(true);
         initComponents();
-        Rectangle bounds = teclat.getBounds();
-        Tecla.defaultSize = new Dimension[6];
-        Tecla.defaultSize[0] = new Dimension(screenSize.width / NUM_TECLES, 40);
-        this.setSize(screenSize);        
 
-        //</editor-fold>
-        tecles = new Tecla[NUM_TECLES];
+//         Rectangle bounds = teclat.getBounds();
+//        Tecla.defaultSize = new Dimension[6];
+//        Tecla.defaultSize[0] = new Dimension(screenSize.width / NUM_TECLES, 40);
+//        this.setSize(screenSize);        
+//        tecles = new Tecla[NUM_TECLES];
         BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
+//
+//        int i;
+//
+//        int row=0;
+//        for (i = 0; i < NUM_TECLES; i++) {
+//            tecles[i] = new Tecla(br.readLine(), null, new Point(Tecla.defaultSize[row].width * i, 0), null,row);
+//            teclat.add(tecles[i]);
+//        }
+        ArrayList<String> linia;
+        String line = br.readLine();
+        while (line != null) {
+            linia = new ArrayList<>();
+            while (line != null && !line.equals("NEWLINE")) {
+//                System.out.println(line);
+                if (line.startsWith("\\")) {
+                    System.out.println(line);
+                } else {
+                    String[] split = line.split(";");
+                    System.out.println(split[0] + "->" + split[1]);
+                    if (split[0].equals("EMPTY")) {
 
-        int i;
-
-        int row=0;
-        for (i = 0; i < NUM_TECLES; i++) {
-            tecles[i] = new Tecla(br.readLine(), null, new Point(Tecla.defaultSize[row].width * i, 0), null,row);
-            teclat.add(tecles[i]);
+                    } else {
+                        linia.add(split[0]);
+                    }
+                }
+                line = br.readLine();
+            }
+            matriu.add(linia);
+            line = br.readLine();
         }
         br.close();
-        teclat.setFocusable(true);
-        teclat.requestFocusInWindow();
-        teclat.setFocusTraversalKeysEnabled(false);
+        System.exit(1);
+//        teclat.setFocusable(true);
+//        teclat.requestFocusInWindow();
+//        teclat.setFocusTraversalKeysEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -212,7 +222,7 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
-        //de moment aixono cal
+        //de moment aixo no cal
 //        System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
 //        if(evt.getSource().equals(teclat))
 //            System.out.println("yupi");
@@ -223,7 +233,7 @@ public class finestra extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-        
+
         System.out.println(jSlider1.getValue());
     }//GEN-LAST:event_jSlider1StateChanged
 
