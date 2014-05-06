@@ -1,6 +1,7 @@
 package SER;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,9 +20,15 @@ public class finestra extends javax.swing.JFrame {
 
     }
 
+    private class rawData {
+        public String datos;
+        public double relWidth, relHeight;
+    }
+
     public finestra() throws FileNotFoundException, IOException {
-        ArrayList<ArrayList<String>> matriu = new ArrayList<>();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
+        ArrayList<ArrayList<Tecla>> teclatData = new ArrayList<>();
+        ArrayList<Double> tamanys = new ArrayList<Double>();
         //<editor-fold defaultstate="collapsed" desc="Inicialitzacio dels valors per defecte de les tecles">
         //TODO ferho en funcio de la pantalla la seguent instruccio es la clau 
         //per a aixo, tambe ens haurem de preocupar per el tamany de la lletra
@@ -33,7 +40,7 @@ public class finestra extends javax.swing.JFrame {
 //         Rectangle bounds = teclat.getBounds();
 //        Tecla.defaultSize = new Dimension[6];
 //        Tecla.defaultSize[0] = new Dimension(screenSize.width / NUM_TECLES, 40);
-//        this.setSize(screenSize);        
+      
 //        tecles = new Tecla[NUM_TECLES];
         BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
 //
@@ -44,30 +51,62 @@ public class finestra extends javax.swing.JFrame {
 //            tecles[i] = new Tecla(br.readLine(), null, new Point(Tecla.defaultSize[row].width * i, 0), null,row);
 //            teclat.add(tecles[i]);
 //        }
-        ArrayList<String> linia;
+        ArrayList<rawData> linia;
+        rawData raw;
+        int i = 0;
         String line = br.readLine();
         while (line != null) {
             linia = new ArrayList<>();
+            tamanys.add(0.0);
             while (line != null && !line.equals("NEWLINE")) {
-//                System.out.println(line);
+                raw = new rawData();
+                String[] split;
+                String[] size;
                 if (line.startsWith("\\")) {
-                    System.out.println(line);
+                    split = line.split(">");
+                    size = split[1].split("<");
                 } else {
-                    String[] split = line.split(";");
-                    System.out.println(split[0] + "->" + split[1]);
-                    if (split[0].equals("EMPTY")) {
-
-                    } else {
-                        linia.add(split[0]);
-                    }
+                    split = line.split(";");
+                    size = split[1].split(",");
                 }
+                raw.datos = split[0];
+                raw.relWidth = Double.parseDouble(size[0]);
+                raw.relHeight = Double.parseDouble(size[1]);
+                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
+                tamanys.set(i, get);
+                linia.add(raw);
                 line = br.readLine();
             }
             matriu.add(linia);
+            i++;
             line = br.readLine();
         }
         br.close();
-        System.exit(1);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(screenSize);
+        int num_files = matriu.size();
+        for (i = 0; i < num_files; i++) {
+            linia = matriu.get(i);
+            Double width_size = tamanys.get(i);
+            double accum = 0.0;
+            ArrayList<Tecla> teclaLine = new ArrayList<>();
+            for (rawData linia1 : linia) {
+                Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
+//                Dimension dim = new Dimension(40, 40);
+                if (!linia1.datos.equals("EMPTY")) {
+                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
+                    System.out.println(p);
+                    System.out.println(dim);
+                    Tecla t = new Tecla(linia1.datos, dim, p);
+                    teclaLine.add(t);
+                    teclat.add(t);
+                }
+                accum += linia1.relWidth;
+            }
+            teclatData.add(teclaLine);
+        }
+
+//        System.exit(1);
 //        teclat.setFocusable(true);
 //        teclat.requestFocusInWindow();
 //        teclat.setFocusTraversalKeysEnabled(false);

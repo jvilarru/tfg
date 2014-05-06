@@ -12,7 +12,6 @@ public class Tecla extends JButton implements ActionListener {
     public static boolean shiftPressed = false;
     public static boolean alTPressed = false;
     
-    public static ActionListener defaultAction;
     public static Dimension defaultSize[];
 
     private char content;
@@ -26,16 +25,25 @@ public class Tecla extends JButton implements ActionListener {
     private Point position;
     private Dimension size;
 
-    public Tecla(String lineToParse,int row) {
+    public Tecla(String lineToParse, Dimension size, Point position) {
         addActionListener(this);
         setFocusable(false);
-        if (lineToParse.matches("*\\*")) {
-
+        //TODO font proporcional
+        this.size = size;
+        this.position = position;
+        setSize(size);
+        this.setLocation(position);
+        String[] splited;
+        if (lineToParse.startsWith("\\")) {
+            splited = lineToParse.substring(1).split("<");
+        } else {
+            splited = lineToParse.split(",");
         }
-        String[] splited = lineToParse.split(",");
+
         title = splited[0];
         shiftTitle = splited[1];
         altTitle = splited[2];
+        //de moment
         content = splited[3].charAt(0);
         shiftContent = splited[4].charAt(0);
         altContent = splited[5].charAt(0);
