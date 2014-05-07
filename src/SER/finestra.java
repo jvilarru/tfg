@@ -1,11 +1,8 @@
 package SER;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,84 +26,63 @@ public class finestra extends javax.swing.JFrame {
         ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
         ArrayList<ArrayList<Tecla>> teclatData = new ArrayList<>();
         ArrayList<Double> tamanys = new ArrayList<Double>();
-        //<editor-fold defaultstate="collapsed" desc="Inicialitzacio dels valors per defecte de les tecles">
-        //TODO ferho en funcio de la pantalla la seguent instruccio es la clau 
-        //per a aixo, tambe ens haurem de preocupar per el tamany de la lletra
-        //i per si ens redimensionen la finestra
-        //fi-TODO
         this.setUndecorated(true);
         initComponents();
-
-//         Rectangle bounds = teclat.getBounds();
-//        Tecla.defaultSize = new Dimension[6];
-//        Tecla.defaultSize[0] = new Dimension(screenSize.width / NUM_TECLES, 40);
-      
-//        tecles = new Tecla[NUM_TECLES];
-        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
-//
-//        int i;
-//
-//        int row=0;
-//        for (i = 0; i < NUM_TECLES; i++) {
-//            tecles[i] = new Tecla(br.readLine(), null, new Point(Tecla.defaultSize[row].width * i, 0), null,row);
-//            teclat.add(tecles[i]);
+        jSlider1.setMaximum(100);
+//        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
+//        ArrayList<rawData> linia;
+//        rawData raw;
+//        int i = 0;
+//        String line = br.readLine();
+//        while (line != null) {
+//            linia = new ArrayList<>();
+//            tamanys.add(0.0);
+//            while (line != null && !line.equals("NEWLINE")) {
+//                raw = new rawData();
+//                String[] split;
+//                String[] size;
+//                if (line.startsWith("\\")) {
+//                    split = line.split(">");
+//                    size = split[1].split("<");
+//                } else {
+//                    split = line.split(";");
+//                    size = split[1].split(",");
+//                }
+//                raw.datos = split[0];
+//                raw.relWidth = Double.parseDouble(size[0]);
+//                raw.relHeight = Double.parseDouble(size[1]);
+//                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
+//                tamanys.set(i, get);
+//                linia.add(raw);
+//                line = br.readLine();
+//            }
+//            matriu.add(linia);
+//            i++;
+//            line = br.readLine();
 //        }
-        ArrayList<rawData> linia;
-        rawData raw;
-        int i = 0;
-        String line = br.readLine();
-        while (line != null) {
-            linia = new ArrayList<>();
-            tamanys.add(0.0);
-            while (line != null && !line.equals("NEWLINE")) {
-                raw = new rawData();
-                String[] split;
-                String[] size;
-                if (line.startsWith("\\")) {
-                    split = line.split(">");
-                    size = split[1].split("<");
-                } else {
-                    split = line.split(";");
-                    size = split[1].split(",");
-                }
-                raw.datos = split[0];
-                raw.relWidth = Double.parseDouble(size[0]);
-                raw.relHeight = Double.parseDouble(size[1]);
-                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
-                tamanys.set(i, get);
-                linia.add(raw);
-                line = br.readLine();
-            }
-            matriu.add(linia);
-            i++;
-            line = br.readLine();
-        }
-        br.close();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(screenSize);
-        int num_files = matriu.size();
-        for (i = 0; i < num_files; i++) {
-            linia = matriu.get(i);
-            Double width_size = tamanys.get(i);
-            double accum = 0.0;
-            ArrayList<Tecla> teclaLine = new ArrayList<>();
-            for (rawData linia1 : linia) {
-                Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
-//                Dimension dim = new Dimension(40, 40);
-                if (!linia1.datos.equals("EMPTY")) {
-                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
-                    System.out.println(p);
-                    System.out.println(dim);
-                    Tecla t = new Tecla(linia1.datos, dim, p);
-                    teclaLine.add(t);
-                    teclat.add(t);
-                }
-                accum += linia1.relWidth;
-            }
-            teclatData.add(teclaLine);
-        }
-
-//        System.exit(1);
+//        br.close();
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        this.setSize(screenSize);
+//        int num_files = matriu.size();
+//        for (i = 0; i < num_files; i++) {
+//            linia = matriu.get(i);
+//            Double width_size = tamanys.get(i);
+//            double accum = 0.0;
+//            ArrayList<Tecla> teclaLine = new ArrayList<>();
+//            for (rawData linia1 : linia) {
+//                Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
+//                if (!linia1.datos.equals("EMPTY")) {
+//                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
+//                    System.out.println(p);
+//                    System.out.println(dim);
+//                    Tecla t = new Tecla(linia1.datos, dim, p);
+//                    teclaLine.add(t);
+//                    teclat.add(t);
+//                }
+//                accum += linia1.relWidth;
+//            }
+//            teclatData.add(teclaLine);
+//        }
 //        teclat.setFocusable(true);
 //        teclat.requestFocusInWindow();
 //        teclat.setFocusTraversalKeysEnabled(false);
@@ -133,12 +109,15 @@ public class finestra extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SER");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setUndecorated(true);
+        setResizable(false);
 
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("teclat"); // NOI18N
-        jTabbedPane1.setOpaque(true);
 
+        teclat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         teclat.setName("teclat"); // NOI18N
+        teclat.setOpaque(false);
         teclat.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 teclatKeyPressed(evt);
@@ -157,6 +136,8 @@ public class finestra extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Teclat", teclat);
+
+        trackpad.setOpaque(false);
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jButton3, org.jdesktop.beansbinding.ELProperty.create("${preferredSize}"), jButton2, org.jdesktop.beansbinding.BeanProperty.create("preferredSize"));
         bindingGroup.addBinding(binding);
@@ -181,6 +162,8 @@ public class finestra extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Trackpad", trackpad);
 
+        tauletaGrafica.setOpaque(false);
+
         javax.swing.GroupLayout tauletaGraficaLayout = new javax.swing.GroupLayout(tauletaGrafica);
         tauletaGrafica.setLayout(tauletaGraficaLayout);
         tauletaGraficaLayout.setHorizontalGroup(
@@ -201,6 +184,8 @@ public class finestra extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Tauleta gràfica", tauletaGrafica);
 
+        jPanel1.setOpaque(false);
+
         jButton1.setText("Close");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,6 +193,7 @@ public class finestra extends javax.swing.JFrame {
             }
         });
 
+        jSlider1.setValue(100);
         jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSlider1StateChanged(evt);
@@ -261,10 +247,7 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
-        //de moment aixo no cal
-//        System.out.println(evt.getKeyChar() + "-->" + evt.getKeyCode());
-//        if(evt.getSource().equals(teclat))
-//            System.out.println("yupi");
+        //de moment aixo no cal    
     }//GEN-LAST:event_teclatKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -272,8 +255,13 @@ public class finestra extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-
-        System.out.println(jSlider1.getValue());
+        //TODO ferho al principi i aqui nomes comprovar una variable
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
+            System.out.println("Transparencia no suportada per el sistema operatiu");
+        }
+        setOpacity((float) (jSlider1.getValue() / 100.0));
     }//GEN-LAST:event_jSlider1StateChanged
 
     public static void main(String args[]) {
