@@ -1,8 +1,14 @@
 package SER;
 
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -11,87 +17,77 @@ import java.util.logging.Logger;
 public class finestra extends javax.swing.JFrame {
 
     private final String defaultLayout = "layoutES.ser";
-    private Tecla tecles[];
-
-    public void posaTecles() {
-
-    }
+    ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
 
     private class rawData {
         public String datos;
         public double relWidth, relHeight;
+        public Tecla tecla;
     }
 
     public finestra() throws FileNotFoundException, IOException {
-        ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
-        ArrayList<ArrayList<Tecla>> teclatData = new ArrayList<>();
         ArrayList<Double> tamanys = new ArrayList<Double>();
-        this.setUndecorated(true);
         initComponents();
         jSlider1.setMaximum(100);
-//        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
-//        ArrayList<rawData> linia;
-//        rawData raw;
-//        int i = 0;
-//        String line = br.readLine();
-//        while (line != null) {
-//            linia = new ArrayList<>();
-//            tamanys.add(0.0);
-//            while (line != null && !line.equals("NEWLINE")) {
-//                raw = new rawData();
-//                String[] split;
-//                String[] size;
-//                if (line.startsWith("\\")) {
-//                    split = line.split(">");
-//                    size = split[1].split("<");
-//                } else {
-//                    split = line.split(";");
-//                    size = split[1].split(",");
-//                }
-//                raw.datos = split[0];
-//                raw.relWidth = Double.parseDouble(size[0]);
-//                raw.relHeight = Double.parseDouble(size[1]);
-//                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
-//                tamanys.set(i, get);
-//                linia.add(raw);
-//                line = br.readLine();
-//            }
-//            matriu.add(linia);
-//            i++;
-//            line = br.readLine();
-//        }
-//        br.close();
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        this.setSize(screenSize);
-//        int num_files = matriu.size();
-//        for (i = 0; i < num_files; i++) {
-//            linia = matriu.get(i);
-//            Double width_size = tamanys.get(i);
-//            double accum = 0.0;
-//            ArrayList<Tecla> teclaLine = new ArrayList<>();
-//            for (rawData linia1 : linia) {
-//                Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
-//                if (!linia1.datos.equals("EMPTY")) {
-//                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
-//                    System.out.println(p);
-//                    System.out.println(dim);
-//                    Tecla t = new Tecla(linia1.datos, dim, p);
-//                    teclaLine.add(t);
-//                    teclat.add(t);
-//                }
-//                accum += linia1.relWidth;
-//            }
-//            teclatData.add(teclaLine);
-//        }
-//        teclat.setFocusable(true);
-//        teclat.requestFocusInWindow();
-//        teclat.setFocusTraversalKeysEnabled(false);
+        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
+        ArrayList<rawData> linia;
+        rawData raw;
+        int i = 0;
+        String line = br.readLine();
+        while (line != null) {
+            linia = new ArrayList<>();
+            tamanys.add(0.0);
+            while (line != null && !line.equals("NEWLINE")) {
+                raw = new rawData();
+                String[] split;
+                String[] size;
+                if (line.startsWith("\\")) {
+                    split = line.split(">");
+                    size = split[1].split("<");
+                } else {
+                    split = line.split(";");
+                    size = split[1].split(",");
+                }
+                raw.datos = split[0];
+                raw.relWidth = Double.parseDouble(size[0]);
+                raw.relHeight = Double.parseDouble(size[1]);
+                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
+                tamanys.set(i, get);
+                linia.add(raw);
+                line = br.readLine();
+            }
+            matriu.add(linia);
+            i++;
+            line = br.readLine();
+        }
+        br.close();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize);
+        teclat.setSize(screenSize.width, screenSize.height - 27);
+        screenSize = teclat.getSize();
+        int num_files = matriu.size();
+        for (i = 0; i < num_files; i++) {
+            linia = matriu.get(i);
+            Double width_size = tamanys.get(i);
+            double accum = 0.0;
+            for (rawData linia1 : linia) {
+                if (!linia1.datos.equals("EMPTY")) {
+                    Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
+                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
+                    linia1.tecla = new Tecla(linia1.datos, dim, p);
+                    teclat.add(linia1.tecla);
+                }
+                accum += linia1.relWidth;
+            }
+        }
+        teclat.setFocusable(true);
+        teclat.requestFocusInWindow();
+        teclat.setFocusTraversalKeysEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         teclat = new javax.swing.JPanel();
@@ -101,6 +97,8 @@ public class finestra extends javax.swing.JFrame {
         tauletaGrafica = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
@@ -128,19 +126,16 @@ public class finestra extends javax.swing.JFrame {
         teclat.setLayout(teclatLayout);
         teclatLayout.setHorizontalGroup(
             teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1212, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         teclatLayout.setVerticalGroup(
             teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Teclat", teclat);
 
         trackpad.setOpaque(false);
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jButton3, org.jdesktop.beansbinding.ELProperty.create("${preferredSize}"), jButton2, org.jdesktop.beansbinding.BeanProperty.create("preferredSize"));
-        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout trackpadLayout = new javax.swing.GroupLayout(trackpad);
         trackpad.setLayout(trackpadLayout);
@@ -149,12 +144,12 @@ public class finestra extends javax.swing.JFrame {
             .addGroup(trackpadLayout.createSequentialGroup()
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         trackpadLayout.setVerticalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(trackpadLayout.createSequentialGroup()
-                .addGap(0, 389, Short.MAX_VALUE)
+                .addGap(0, 321, Short.MAX_VALUE)
                 .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)))
@@ -164,6 +159,26 @@ public class finestra extends javax.swing.JFrame {
 
         tauletaGrafica.setOpaque(false);
 
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel2MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jPanel2MouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 594, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout tauletaGraficaLayout = new javax.swing.GroupLayout(tauletaGrafica);
         tauletaGrafica.setLayout(tauletaGraficaLayout);
         tauletaGraficaLayout.setHorizontalGroup(
@@ -171,15 +186,20 @@ public class finestra extends javax.swing.JFrame {
             .addGroup(tauletaGraficaLayout.createSequentialGroup()
                 .addGroup(tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 1163, Short.MAX_VALUE))
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tauletaGraficaLayout.setVerticalGroup(
             tauletaGraficaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tauletaGraficaLayout.createSequentialGroup()
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Tauleta gràfica", tauletaGrafica);
@@ -207,13 +227,13 @@ public class finestra extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(83, 83, 83)
+                .addGap(63, 63, 63)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1012, Short.MAX_VALUE))
+                .addGap(0, 449, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,7 +243,7 @@ public class finestra extends javax.swing.JFrame {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 375, Short.MAX_VALUE))
+                .addGap(0, 308, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Opcions", jPanel1);
@@ -240,8 +260,6 @@ public class finestra extends javax.swing.JFrame {
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Teclat");
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -263,6 +281,16 @@ public class finestra extends javax.swing.JFrame {
         }
         setOpacity((float) (jSlider1.getValue() / 100.0));
     }//GEN-LAST:event_jSlider1StateChanged
+
+    private void jPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MousePressed
+        Point point = evt.getPoint();
+        tauletaGrafica.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        System.out.println(point);
+    }//GEN-LAST:event_jPanel2MousePressed
+
+    private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
+        tauletaGrafica.setCursor(Cursor.getDefaultCursor());
+    }//GEN-LAST:event_jPanel2MouseReleased
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) and display of the window">
@@ -301,13 +329,14 @@ public class finestra extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel tauletaGrafica;
     private javax.swing.JPanel teclat;
     private javax.swing.JPanel trackpad;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
