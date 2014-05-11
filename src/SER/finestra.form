@@ -42,10 +42,10 @@
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
       <Properties>
         <Property name="focusable" type="boolean" value="false"/>
-        <Property name="name" type="java.lang.String" value="teclat" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="tabs" noResource="true"/>
       </Properties>
       <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Teclat"/>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Tabs"/>
       </AccessibilityProperties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="finestra_jTabbedPane1"/>
@@ -179,7 +179,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="594" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="711" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -216,7 +216,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jSlider1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="449" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="566" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

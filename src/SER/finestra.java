@@ -83,6 +83,7 @@ public class finestra extends javax.swing.JFrame {
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
+//        System.exit(1);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,7 +112,7 @@ public class finestra extends javax.swing.JFrame {
         setResizable(false);
 
         jTabbedPane1.setFocusable(false);
-        jTabbedPane1.setName("teclat"); // NOI18N
+        jTabbedPane1.setName("tabs"); // NOI18N
 
         teclat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         teclat.setName("teclat"); // NOI18N
@@ -172,7 +173,7 @@ public class finestra extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 594, Short.MAX_VALUE)
+            .addGap(0, 711, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,7 +234,7 @@ public class finestra extends javax.swing.JFrame {
                 .addComponent(jButton1))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 449, Short.MAX_VALUE))
+                .addGap(0, 566, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,7 +260,7 @@ public class finestra extends javax.swing.JFrame {
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jTabbedPane1.getAccessibleContext().setAccessibleName("Teclat");
+        jTabbedPane1.getAccessibleContext().setAccessibleName("Tabs");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

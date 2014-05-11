@@ -1,10 +1,12 @@
 package SER;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JButton;
 
 public class Tecla extends JButton implements ActionListener {
@@ -24,6 +26,7 @@ public class Tecla extends JButton implements ActionListener {
     
     private Point position;
     private Dimension size;
+    private Dimension minSize;
 
     public Tecla(String lineToParse, Dimension size, Point position) {
         addActionListener(this);
@@ -39,10 +42,15 @@ public class Tecla extends JButton implements ActionListener {
         } else {
             splited = lineToParse.split(",");
         }
-
         title = splited[0];
         shiftTitle = splited[1];
         altTitle = splited[2];
+        String max = (title.length() >= shiftTitle.length()) ? title : shiftTitle;
+        max = (altTitle.length() > max.length()) ? altTitle : max;
+        Font font = getFont();
+        Rectangle2D stringBounds = font.getStringBounds(max, getFontMetrics(font).getFontRenderContext());
+        minSize = new Dimension((int) stringBounds.getWidth() + (14 * 2), (int) stringBounds.getHeight() + (6 * 2));
+
         //de moment
         content = splited[3].charAt(0);
         shiftContent = splited[4].charAt(0);
