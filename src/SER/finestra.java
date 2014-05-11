@@ -26,7 +26,7 @@ public class finestra extends javax.swing.JFrame {
     }
 
     public finestra() throws FileNotFoundException, IOException {
-        ArrayList<Double> tamanys = new ArrayList<Double>();
+        ArrayList<Double> tamanys = new ArrayList<>();
         initComponents();
         jSlider1.setMaximum(100);
         BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
@@ -112,6 +112,7 @@ public class finestra extends javax.swing.JFrame {
 
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("teclat"); // NOI18N
+        jTabbedPane1.setOpaque(true);
 
         teclat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         teclat.setName("teclat"); // NOI18N
@@ -233,7 +234,7 @@ public class finestra extends javax.swing.JFrame {
                 .addComponent(jButton1))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 449, Short.MAX_VALUE))
+                .addGap(0, 454, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,8 +279,11 @@ public class finestra extends javax.swing.JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
             System.out.println("Transparencia no suportada per el sistema operatiu");
+            jSlider1.setEnabled(false);
+            jLabel1.setEnabled(false);
         }
-        setOpacity((float) (jSlider1.getValue() / 100.0));
+        else
+            setOpacity((float) (Math.max(0.2, jSlider1.getValue() / 100.0)));
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MousePressed
