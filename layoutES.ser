@@ -71,7 +71,7 @@ m,M,µ,13,13,13;1,1
 .,:,·,13,13,13;1,1
 -,_,-,13,13,13;1,1
 ↑,↑,↑,13,13,13;1,1
-Shift,Shift,Shift,13,13,13;1,1
+Shift,Shift,Shift,16,16,16;1,1
 Supr,Supr,Supr,16,16,16;1,1
 NEWLINE
 Menu,Menu,Menu,13,13,13;1,1
@@ -79,7 +79,7 @@ Ctrl,Ctrl,Ctrl,13,13,13;1,1
 Win,Win,Win,13,13,13;1,1
 Alt,Alt,Alt,13,13,13;1,1
 Space,Space,Space,13,13,13;5.5,1
-AltGr,AltGr,AltGr,13,13,13;1,1
+AltGr,AltGr,AltGr,16,16,16;1,1
 Ctrl,Ctrl,Ctrl,13,13,13;1,1
 ←,←,←,13,13,13;1,1
 ↓,↓,↓,13,13,13;1,1

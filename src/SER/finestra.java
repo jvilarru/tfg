@@ -121,6 +121,9 @@ public class finestra extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 teclatKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                teclatKeyReleased(evt);
+            }
         });
 
         javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
@@ -266,7 +269,7 @@ public class finestra extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
-        //de moment aixo no cal    
+        System.out.println("PRESSED");
     }//GEN-LAST:event_teclatKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -292,6 +295,10 @@ public class finestra extends javax.swing.JFrame {
     private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
         tauletaGrafica.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_jPanel2MouseReleased
+
+    private void teclatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyReleased
+        System.out.println("RELEASED");
+    }//GEN-LAST:event_teclatKeyReleased
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) and display of the window">

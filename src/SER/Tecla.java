@@ -50,11 +50,12 @@ public class Tecla extends JButton implements ActionListener {
         Font font = getFont();
         Rectangle2D stringBounds = font.getStringBounds(max, getFontMetrics(font).getFontRenderContext());
         minSize = new Dimension((int) stringBounds.getWidth() + (14 * 2), (int) stringBounds.getHeight() + (6 * 2));
-
+        Font newFont = font.deriveFont(font.getSize2D() * Math.min((float) size.width / (float) (stringBounds.getWidth() + 14 * 2), (float) size.height / (float) (stringBounds.getHeight() + 4 * 2)));
+        setFont(newFont);
         //de moment
-        content = splited[3].charAt(0);
-        shiftContent = splited[4].charAt(0);
-        altContent = splited[5].charAt(0);
+        content = (char) Integer.parseInt(splited[3]);
+        shiftContent = (char) Integer.parseInt(splited[4]);
+        altContent = (char) Integer.parseInt(splited[5]);
         this.setText(title);
     }
     
