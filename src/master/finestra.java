@@ -1,4 +1,4 @@
-package SER;
+package master;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -10,14 +10,20 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
 
 public class finestra extends javax.swing.JFrame {
 
     private final String defaultLayout = "layoutES.ser";
     ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
+    private boolean tauleta_clicked = false;
+    private DefaultListModel<String> model;
 
     private class rawData {
         public String datos;
@@ -28,6 +34,9 @@ public class finestra extends javax.swing.JFrame {
     public finestra() throws FileNotFoundException, IOException {
         ArrayList<Double> tamanys = new ArrayList<Double>();
         initComponents();
+        model = new DefaultListModel<>();
+        jList1.setModel(model);
+        System.out.println("Start-> ts=" + System.currentTimeMillis());
         jSlider1.setMaximum(100);
         BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
         ArrayList<rawData> linia;
@@ -66,6 +75,10 @@ public class finestra extends javax.swing.JFrame {
         teclat.setSize(screenSize.width, screenSize.height - 27);
         screenSize = teclat.getSize();
         int num_files = matriu.size();
+        Tecla.minFontSize = new float[20];
+        for (i = 0; i < 20; i++) {
+            Tecla.minFontSize[i] = (float) 200.0;
+        }
         for (i = 0; i < num_files; i++) {
             linia = matriu.get(i);
             Double width_size = tamanys.get(i);
@@ -74,16 +87,27 @@ public class finestra extends javax.swing.JFrame {
                 if (!linia1.datos.equals("EMPTY")) {
                     Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
                     Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
-                    linia1.tecla = new Tecla(linia1.datos, dim, p);
+                    linia1.tecla = new Tecla(linia1.datos, dim, p, i);
                     teclat.add(linia1.tecla);
                 }
                 accum += linia1.relWidth;
             }
         }
+        for (i = 0; i < num_files; i++) {
+            for (rawData linia1 : matriu.get(i)) {
+                Tecla t = linia1.tecla;
+                if (t != null) {
+                    t.setFontSize(t.getTitle().length());
+                }
+
+            }
+        }
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
-//        System.exit(1);
+        left_button.setSize((int) (screenSize.width * 0.4), left_button.getSize().height);
+        middle_button.setSize((int) (screenSize.width * 0.2), middle_button.getSize().height);
+        right_button.setSize((int) (screenSize.width * 0.4), right_button.getSize().height);
     }
 
     @SuppressWarnings("unchecked")
@@ -93,8 +117,10 @@ public class finestra extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         teclat = new javax.swing.JPanel();
         trackpad = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        left_button = new javax.swing.JButton();
+        right_button = new javax.swing.JButton();
+        middle_button = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         tauletaGrafica = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -104,6 +130,10 @@ public class finestra extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jLabel2 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SER");
@@ -117,14 +147,6 @@ public class finestra extends javax.swing.JFrame {
         teclat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         teclat.setName("teclat"); // NOI18N
         teclat.setOpaque(false);
-        teclat.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                teclatKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                teclatKeyReleased(evt);
-            }
-        });
 
         javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
         teclat.setLayout(teclatLayout);
@@ -141,22 +163,46 @@ public class finestra extends javax.swing.JFrame {
 
         trackpad.setOpaque(false);
 
+        left_button.setName("left_button"); // NOI18N
+
+        right_button.setName("right_button"); // NOI18N
+
+        middle_button.setName("middle_button"); // NOI18N
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 315, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout trackpadLayout = new javax.swing.GroupLayout(trackpad);
         trackpad.setLayout(trackpadLayout);
         trackpadLayout.setHorizontalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(trackpadLayout.createSequentialGroup()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(left_button, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(middle_button, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(right_button, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         trackpadLayout.setVerticalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(trackpadLayout.createSequentialGroup()
-                .addGap(0, 321, Short.MAX_VALUE)
-                .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, trackpadLayout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(middle_button, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(left_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(right_button, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))))
         );
 
         jTabbedPane1.addTab("Trackpad", trackpad);
@@ -171,12 +217,17 @@ public class finestra extends javax.swing.JFrame {
                 jPanel2MouseReleased(evt);
             }
         });
+        jPanel2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel2MouseDragged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 711, Short.MAX_VALUE)
+            .addGap(0, 644, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,30 +275,53 @@ public class finestra extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Opacity");
+
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jList1);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Client List");
+
+        jButton2.setText("Scan");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 566, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2)
+                    .addComponent(jSlider1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(375, 375, 375)
+                .addComponent(jButton1))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel1))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 308, Short.MAX_VALUE))
+                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(109, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Opcions", jPanel1);
@@ -268,10 +342,6 @@ public class finestra extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void teclatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyPressed
-        System.out.println("PRESSED");
-    }//GEN-LAST:event_teclatKeyPressed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -281,26 +351,46 @@ public class finestra extends javax.swing.JFrame {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
+            jSlider1.setEnabled(false);
+            jLabel1.setEnabled(false);
             System.out.println("Transparencia no suportada per el sistema operatiu");
+        } else{
+            setOpacity((float) (jSlider1.getValue() / 100.0));
         }
-        setOpacity((float) (jSlider1.getValue() / 100.0));
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MousePressed
-        Point point = evt.getPoint();
+        float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
+        float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
         tauletaGrafica.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        System.out.println(point);
+        System.out.println("CLICKED");
+        System.out.println("x-> " + auxX);
+        System.out.println("y-> " + auxY);
+        System.out.println("button-> " + evt.getButton());
+        tauleta_clicked = true;
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
+        tauleta_clicked = false;
         tauletaGrafica.setCursor(Cursor.getDefaultCursor());
+        System.out.println("RELEASED");
+        System.out.println("button-> " + evt.getButton());
     }//GEN-LAST:event_jPanel2MouseReleased
 
-    private void teclatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teclatKeyReleased
-        System.out.println("RELEASED");
-    }//GEN-LAST:event_teclatKeyReleased
+    private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
+        float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
+        float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
+        System.out.println("MOVED");
+        System.out.println("x-> " + auxX);
+        System.out.println("y-> " + auxY);
+    }//GEN-LAST:event_jPanel2MouseDragged
 
-    public static void main(String args[]) {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //stub de scanejar xarxa
+        model.addElement("" + System.currentTimeMillis());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public static void main(String args[]) throws SocketException, IOException {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) and display of the window">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -315,7 +405,16 @@ public class finestra extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        DatagramSocket socket = new DatagramSocket();
+        byte buf[] = new byte[1024];
+        DatagramPacket paquet = new DatagramPacket(buf, 1024);
+        InetAddress dir = InetAddress.getByName("127.255.255.255");
+        paquet.setAddress(dir);
+        paquet.setPort(4096);
+        socket.setBroadcast(true);
+        socket.send(paquet);
+        /*
+         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -326,7 +425,7 @@ public class finestra extends javax.swing.JFrame {
                     Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        });
+        });*/
         //</editor-fold>
 
     }
@@ -334,15 +433,21 @@ public class finestra extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton left_button;
+    private javax.swing.JButton middle_button;
+    private javax.swing.JButton right_button;
     private javax.swing.JPanel tauletaGrafica;
     private javax.swing.JPanel teclat;
     private javax.swing.JPanel trackpad;

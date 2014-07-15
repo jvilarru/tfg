@@ -27,7 +27,7 @@ NEWLINE
 ¡,¿,~,13,13,13;1,1
 ←,←,←,13,13,13;1.5,1
 NEWLINE
-Tab,AntiTab,Tab,13,13,13;1.5,1
+Tab,Tab,Tab,13,13,13;1.5,1
 q,Q,@,13,13,13;1,1
 w,W,ł,13,13,13;1,1
 e,E,€,13,13,13;1,1
@@ -89,7 +89,7 @@ NEWLINE
 Inicio,Inicio,Inicio,13,13,13;1,1
 Fin,Fin,Fin,13,13,13;1,1
 Ins,Ins,Ins,15,15,15;1,1
-Impr,pant,Impr,pant,Impr,pant,13,13,13;1,1
+ImprPant,ImprPant,ImprPant,13,13,13;1,1
 RePag,RePag,RePag,15,15,15;1,1
 AvPag,AvPag,AvPag,15,15,15;1,1
 Pause,Pause,Pause,15,15,15;1,1
