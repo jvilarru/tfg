@@ -20,6 +20,8 @@ public class receiver implements Runnable {
         this.port_num = port_num;
         this.server_name = server_name;
         this.server_ip = server_ip;
+        Thread t = new Thread(this);
+        t.start();
     }
 
     @Override
