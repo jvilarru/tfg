@@ -49,5 +49,9 @@ public class receiver implements Runnable {
         t = new Thread(this);
         t.start();
     }
+    
+    public boolean status() {
+        return running;
+    }
 
 }

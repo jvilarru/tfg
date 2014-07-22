@@ -4,6 +4,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -38,6 +39,12 @@ public class client {
         }
         if (args.length >= 2) {
             name = args[1];
+        } else {
+            try {
+                name = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException ex) {
+                name = name + (int)(Math.random() * 100.0);
+            }
         }
         try {
             new client().start();

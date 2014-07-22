@@ -44,6 +44,10 @@ public class Listener implements Runnable {
         t = new Thread(this);
         t.start();
     }
+    
+    public boolean status() {
+        return running;
+    }
 
     @Override
     public void run() {
