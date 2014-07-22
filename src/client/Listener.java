@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class Listener implements Runnable {
 
     private InetAddress local_ip;
-    private int port;
+    private int portListen;
     private String client_name;
     private int portPool;
     private DatagramSocket sock;
@@ -22,34 +22,49 @@ public class Listener implements Runnable {
     private String server_name;
     private ArrayList<receiver> llistaServers;
     private boolean running;
+    private Thread t;
 
     public Listener(InetAddress local_ip, int port, String client_name) throws SocketException {
         this.local_ip = local_ip;
-        this.port = port;
+        this.portListen = port;
         this.client_name = client_name;
-        this.sock = new DatagramSocket(port, local_ip);
-        running = true;
         llistaServers = new ArrayList<receiver>();
     }
 
     public void stop() {
         running = false;
+        for (receiver recv : llistaServers) {
+            recv.stop();
+        }
+        System.out.println("Waiting for the connections to finish");
+    }
+
+    public void start() {
+        running = true;
+        t = new Thread(this);
+        t.start();
     }
 
     @Override
     public void run() {
         boolean received = true;
+        System.out.println("Listening to " + local_ip.getHostAddress() + ":" + portListen);
         try {
-            sock.setSoTimeout(1000);
+            this.sock = new DatagramSocket(portListen, local_ip);
+            sock.setSoTimeout(100);
         } catch (SocketException ex) {
             Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
         while (running) {
+
             try {
                 sock.receive(pack);
             } catch (SocketTimeoutException ex) {
                 received = false;
+                if (client.mode == client.DEBUG) {
+                    System.out.println("Timeout");
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
                 received = false;
@@ -76,16 +91,21 @@ public class Listener implements Runnable {
                 pack.setLength(message.length);
                 try {
                     sock.send(pack);
-
                 } catch (IOException ex) {
                     Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                llistaServers.add(new receiver(portPool, server_name, address));
+//                receiver r = new receiver(portPool, local_ip, address,address);
+//                llistaServers.add(r);
+//                r.start();
+                System.out.println("Acabo de crear un receiver per al server " + server_name + " amb la direccio " + address.getHostAddress());
+                System.out.println("Aquest receiver esta bindejat a l'adreça " + local_ip.getHostAddress() + ":" + portPool);
                 portPool++;
 
                 //creacio de receiver amb server_name+server_ip+port+local_ip
             }
 
         }
+        sock.disconnect();
+        sock.close();
     }
 }

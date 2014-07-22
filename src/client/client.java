@@ -1,6 +1,5 @@
 package client;
 
-import java.net.DatagramSocket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -12,19 +11,33 @@ import java.util.logging.Logger;
 
 public class client {
 
-    private ArrayList<NetworkInterface> ifaceUp;
+    private ArrayList<Actiu> ifaceUp;
     private ArrayList<NetworkInterface> ifaceDown;
-    private DatagramSocket recvConex;
     public static final int port = 8888;
-    private static final int DEBUG = 1;
-    private static final int RELEASE = 0;
-    private static int mode;
+    private static String name = "Halfonso";
+    public static final int DEBUG = 1;
+    public static final int RELEASE = 0;
+    public static int mode;
+
+    private class Actiu {
+
+        public NetworkInterface iface;
+        public Listener list;
+
+        public Actiu(NetworkInterface iface) {
+            this.iface = iface;
+        }
+
+    }
 
     public static void main(String args[]) {
         if (args.length >= 1 && args[0].equalsIgnoreCase("DEBUG")) {
             mode = DEBUG;
         } else {
             mode = RELEASE;
+        }
+        if (args.length >= 2) {
+            name = args[1];
         }
         try {
             new client().start();
@@ -38,7 +51,6 @@ public class client {
         ifaceDown = new ArrayList<>();
         classifyInterfaces();
         bindPorts();
-//        recvConex = new DatagramSocket(port);
     }
 
     private void classifyInterfaces() throws SocketException {
@@ -48,9 +60,7 @@ public class client {
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface iface = networkInterfaces.nextElement();
                 if (iface.isUp() && (!iface.isLoopback() || mode == DEBUG)) {
-                    if (!ifaceUp.contains(iface)) {
-                        ifaceUp.add(iface);
-                    }
+                    add(ifaceUp, iface);
                     if (ifaceDown.contains(iface)) {
                         ifaceDown.remove(iface);
                     }
@@ -58,24 +68,45 @@ public class client {
                     if (!ifaceDown.contains(iface)) {
                         ifaceDown.add(iface);
                     }
-                    if (ifaceUp.contains(iface)) {
-                        ifaceUp.remove(iface);
-                    }
+                    remove(ifaceUp, iface);
                 }
             }
         }
     }
 
-    private void bindPorts() {
-        for (NetworkInterface iface : ifaceUp) {
-            System.out.println("Adreçes per a linterficie " + iface.getDisplayName());
-            Enumeration<InetAddress> addresses = iface.getInetAddresses();
+    private void bindPorts() throws SocketException {
+        System.out.println("Interfaces:");
+        for (Actiu actiu : ifaceUp) {
+            System.out.println("\t" + actiu.iface.getDisplayName());
+            Enumeration<InetAddress> addresses = actiu.iface.getInetAddresses();
             while (addresses.hasMoreElements()) {
                 InetAddress address = addresses.nextElement();
                 if (!address.getClass().equals(Inet6Address.class)) {
-                    System.out.println(address.getHostAddress());
+                    System.out.println("\t  |---> " + address.getHostAddress());
+                    actiu.list = new Listener(address, port, name);
+                    actiu.list.start();
                 }
             }
         }
+    }
+
+    private boolean add(ArrayList<Actiu> llista, NetworkInterface element) {
+        for (Actiu elemLlista : llista) {
+            if (elemLlista.iface.equals(element)) {
+                return false;
+            }
+        }
+        llista.add(new Actiu(element));
+        return false;
+    }
+
+    private boolean remove(ArrayList<Actiu> llista, NetworkInterface element) {
+        for (Actiu elemLlista : llista) {
+            if (elemLlista.iface.equals(element)) {
+                llista.remove(elemLlista);
+                return true;
+            }
+        }
+        return false;
     }
 }
