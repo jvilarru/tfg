@@ -23,12 +23,14 @@ public class Listener implements Runnable {
     private ArrayList<receiver> llistaServers;
     private boolean running;
     private Thread t;
+    private byte[] buff;
+    private static final int BUFF_LEN=1024;
 
     public Listener(InetAddress local_ip, int port, String client_name) throws SocketException {
         this.local_ip = local_ip;
         this.portListen = port;
         this.client_name = client_name;
-        llistaServers = new ArrayList<receiver>();
+        llistaServers = new ArrayList<>();
     }
 
     public void stop() {
@@ -51,19 +53,21 @@ public class Listener implements Runnable {
 
     @Override
     public void run() {
-        boolean received = true;
+        boolean received;
         System.out.println("Listening to " + local_ip.getHostAddress() + ":" + portListen);
         try {
             this.sock = new DatagramSocket(portListen, local_ip);
+            buff = new byte[BUFF_LEN];
+            this.pack = new DatagramPacket(buff, BUFF_LEN);
             sock.setSoTimeout(100);
         } catch (SocketException ex) {
             Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
         while (running) {
-
             try {
                 sock.receive(pack);
+                received = true;
             } catch (SocketTimeoutException ex) {
                 received = false;
                 if (client.mode == client.DEBUG) {
@@ -72,6 +76,7 @@ public class Listener implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
                 received = false;
+                System.exit(1);
             }
             if (received) {
                 //tractament de paquet
