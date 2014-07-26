@@ -6,14 +6,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Listener implements Runnable {
 
-    private InetAddress local_ip;
     private int portListen;
     private String client_name;
     
@@ -27,8 +25,7 @@ public class Listener implements Runnable {
     private byte[] buff;
     private static final int BUFF_LEN=1024;
 
-    public Listener(InetAddress local_ip, int port, String client_name){
-        this.local_ip = local_ip;
+    public Listener(int port, String client_name){
         this.portListen = port;
         this.client_name = client_name;
         llistaReceivers = new ArrayList<>();
@@ -55,8 +52,8 @@ public class Listener implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Listening to " + local_ip.getHostAddress() + ":" + portListen);
-            this.sock = new DatagramSocket(portListen, local_ip);
+            this.sock = new DatagramSocket(portListen, InetAddress.getByName("0.0.0.0"));
+            System.out.println("Listening to " + sock.getInetAddress().getHostAddress() + ":" + portListen);
             buff = new byte[BUFF_LEN];
             this.pack = new DatagramPacket(buff, BUFF_LEN);
             while (running) {
@@ -70,7 +67,7 @@ public class Listener implements Runnable {
                 InetAddress address = pack.getAddress();
                 pack.setSocketAddress(socketAddress);
                 byte[] name = client_name.getBytes();
-                byte[] IP = local_ip.getHostAddress().getBytes();
+                byte[] IP = sock.getInetAddress().getHostAddress().getBytes();
                 byte[] portMessages = ("" + portPool).getBytes();
                 byte[] message = new byte[name.length + IP.length + portMessages.length + 3];
                 message[0] = (byte) name.length;
@@ -91,7 +88,7 @@ public class Listener implements Runnable {
 //                llistaServers.add(r);
 //                r.start();
                 System.out.println("Acabo de crear un receiver per al server " + server_name + " amb la direccio " + address.getHostAddress());
-                System.out.println("Aquest receiver esta bindejat a l'adreça " + local_ip.getHostAddress() + ":" + portPool);
+                System.out.println("Aquest receiver esta bindejat a l'adreça " + sock.getInetAddress().getHostAddress() + ":" + portPool);
                 portPool++;
 
                 //creacio de receiver amb server_name+server_ip+port+local_ip               

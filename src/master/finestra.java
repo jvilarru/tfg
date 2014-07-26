@@ -14,10 +14,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
@@ -425,18 +427,21 @@ public class finestra extends javax.swing.JFrame {
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface iface = networkInterfaces.nextElement();
                 if (iface.isUp() && !iface.isLoopback()) {
-                    Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
-                    while(inetAddresses.hasMoreElements() && !found){
-                        InetAddress nextElement = inetAddresses.nextElement();
-                        if (nextElement.getClass().equals(Inet4Address.class)){
-                            found = true;
-                            paquet.setAddress(nextElement);
-                            paquet.setData(server_name.getBytes());
-                            paquet.setLength(server_name.getBytes().length);
-                            paquet.setPort(4096);
-                            socket.setBroadcast(true);
-                            socket.send(paquet);
-                            System.exit(1);
+                    List<InterfaceAddress> inetAddresses = iface.getInterfaceAddresses();
+                    if (!inetAddresses.isEmpty()){
+                        for (int i = 0; i < inetAddresses.size() && !found;i++) {
+                            InterfaceAddress iaddress = inetAddresses.get(i);
+                            InetAddress bcst = iaddress.getBroadcast();
+                            if(bcst != null){
+                                found = true;
+                                paquet.setAddress(bcst);
+//                                paquet.setAddress(InetAddress.getByName("192.168.0.193"));
+                                paquet.setData(server_name.getBytes());
+                                paquet.setLength(server_name.getBytes().length);
+                                paquet.setPort(8888);
+                                socket.setBroadcast(true);
+                                socket.send(paquet);
+                            }
                         }
                     }
                 }

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -112,7 +111,7 @@ public class client {
                 System.out.println("\t" + element.getDisplayName() + "|---> " + nextElement.getHostAddress());
                 Actiu act = new Actiu(element);
                 llista.add(act);
-                act.list = new Listener(nextElement, port, name);
+                act.list = new Listener(port, name);
                 act.list.start();
                 return true;
             }
