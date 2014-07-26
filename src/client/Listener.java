@@ -11,10 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Listener implements Runnable {
-
-    private int portListen;
-    private String client_name;
-    
+   
     private int portPool;
     private DatagramSocket sock;
     private DatagramPacket pack;
@@ -25,9 +22,7 @@ public class Listener implements Runnable {
     private byte[] buff;
     private static final int BUFF_LEN=1024;
 
-    public Listener(int port, String client_name){
-        this.portListen = port;
-        this.client_name = client_name;
+    public Listener(){
         llistaReceivers = new ArrayList<>();
     }
 
@@ -44,16 +39,11 @@ public class Listener implements Runnable {
         t = new Thread(this);
         t.start();
     }
-    
-    public boolean status() {
-        return running;
-    }
 
     @Override
     public void run() {
         try {
-            this.sock = new DatagramSocket(portListen, InetAddress.getByName("0.0.0.0"));
-            System.out.println("Listening to " + sock.getInetAddress().getHostAddress() + ":" + portListen);
+            this.sock = new DatagramSocket(client.port, InetAddress.getByName("0.0.0.0"));
             buff = new byte[BUFF_LEN];
             this.pack = new DatagramPacket(buff, BUFF_LEN);
             while (running) {
@@ -66,7 +56,7 @@ public class Listener implements Runnable {
                 SocketAddress socketAddress = pack.getSocketAddress();
                 InetAddress address = pack.getAddress();
                 pack.setSocketAddress(socketAddress);
-                byte[] name = client_name.getBytes();
+                byte[] name = client.name.getBytes();
                 byte[] IP = sock.getInetAddress().getHostAddress().getBytes();
                 byte[] portMessages = ("" + portPool).getBytes();
                 byte[] message = new byte[name.length + IP.length + portMessages.length + 3];
