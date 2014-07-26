@@ -1,5 +1,9 @@
 package client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -57,16 +61,30 @@ public class client {
         ifaceUp = new ArrayList<>();
         ifaceDown = new ArrayList<>();
         classifyInterfaces();
-        bindPorts();
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String s = "";
+        try {
+            s = in.readLine();
+        } catch (IOException ex) {
+            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
+        if (s.equalsIgnoreCase("STOP")){
+            for (Actiu actiu : ifaceUp) {
+                System.out.println("Stopping \t" + actiu.iface.getDisplayName());
+                actiu.list.stop();
+            }
+        }
     }
 
     private void classifyInterfaces() throws SocketException {
         Enumeration<NetworkInterface> networkInterfaces;
         networkInterfaces = NetworkInterface.getNetworkInterfaces();
         if (networkInterfaces != null) {
+            System.out.println("Interfaces: ");
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface iface = networkInterfaces.nextElement();
-                if (iface.isUp() && (!iface.isLoopback() || mode == DEBUG)) {
+                if (iface.isUp() && !iface.isLoopback()) {
                     add(ifaceUp, iface);
                     if (ifaceDown.contains(iface)) {
                         ifaceDown.remove(iface);
@@ -81,29 +99,24 @@ public class client {
         }
     }
 
-    private void bindPorts() throws SocketException {
-        System.out.println("Interfaces:");
-        for (Actiu actiu : ifaceUp) {
-            System.out.println("\t" + actiu.iface.getDisplayName());
-            Enumeration<InetAddress> addresses = actiu.iface.getInetAddresses();
-            while (addresses.hasMoreElements()) {
-                InetAddress address = addresses.nextElement();
-                if (!address.getClass().equals(Inet6Address.class)) {
-                    System.out.println("\t  |---> " + address.getHostAddress());
-                    actiu.list = new Listener(address, port, name);
-                    actiu.list.start();
-                }
-            }
-        }
-    }
-
     private boolean add(ArrayList<Actiu> llista, NetworkInterface element) {
         for (Actiu elemLlista : llista) {
             if (elemLlista.iface.equals(element)) {
                 return false;
             }
         }
-        llista.add(new Actiu(element));
+        Enumeration<InetAddress> enume = element.getInetAddresses();
+        while(enume.hasMoreElements()){
+            InetAddress nextElement = enume.nextElement();
+            if(nextElement.getClass().equals(Inet4Address.class)){
+                System.out.println("\t" + element.getDisplayName() + "|---> " + nextElement.getHostAddress());
+                Actiu act = new Actiu(element);
+                llista.add(act);
+                act.list = new Listener(nextElement, port, name);
+                act.list.start();
+                return true;
+            }
+        }
         return false;
     }
 
@@ -111,6 +124,8 @@ public class client {
         for (Actiu elemLlista : llista) {
             if (elemLlista.iface.equals(element)) {
                 llista.remove(elemLlista);
+                if(elemLlista.list != null)
+                    elemLlista.list.stop();
                 return true;
             }
         }

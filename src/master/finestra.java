@@ -12,9 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
@@ -24,6 +27,7 @@ public class finestra extends javax.swing.JFrame {
     ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
     private boolean tauleta_clicked = false;
     private DefaultListModel<String> model;
+    private String name = "Server";
 
     private class rawData {
         public String datos;
@@ -387,6 +391,11 @@ public class finestra extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //stub de scanejar xarxa
+//        int BUFF_LEN=1024;
+//        DatagramPacket datagramPacket;
+//        byte buf[] =  new byte[BUFF_LEN];
+//        datagramPacket = new DatagramPacket(buf, BUFF_LEN);
+        
         model.addElement("" + System.currentTimeMillis());
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -407,12 +416,33 @@ public class finestra extends javax.swing.JFrame {
         }
         DatagramSocket socket = new DatagramSocket();
         byte buf[] = new byte[1024];
+        boolean found = false;
+        String server_name = "Halfonso";
         DatagramPacket paquet = new DatagramPacket(buf, 1024);
-        InetAddress dir = InetAddress.getByName("127.255.255.255");
-        paquet.setAddress(dir);
-        paquet.setPort(4096);
-        socket.setBroadcast(true);
-        socket.send(paquet);
+        Enumeration<NetworkInterface> networkInterfaces;
+        networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        if (networkInterfaces != null) {
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface iface = networkInterfaces.nextElement();
+                if (iface.isUp() && !iface.isLoopback()) {
+                    Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
+                    while(inetAddresses.hasMoreElements() && !found){
+                        InetAddress nextElement = inetAddresses.nextElement();
+                        if (nextElement.getClass().equals(Inet4Address.class)){
+                            found = true;
+                            paquet.setAddress(nextElement);
+                            paquet.setData(server_name.getBytes());
+                            paquet.setLength(server_name.getBytes().length);
+                            paquet.setPort(4096);
+                            socket.setBroadcast(true);
+                            socket.send(paquet);
+                            System.exit(1);
+                        }
+                    }
+                }
+            }
+        }
+        
         /*
          java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
