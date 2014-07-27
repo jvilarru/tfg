@@ -72,6 +72,7 @@ public class Listener implements Runnable {
                 //Esperar connexio i al rebre crear un receiver amb el nou socket
                 //i afegirlo a la llista per a si s'ha de tancar, al mateix 
                 //temps que l'arranquem
+                System.out.println("LISTENER\n\tCreo un receiver amb nom -->" + Client.name);
                 Receiver r = new Receiver(server_name, Ssock.accept());
                 r.start();
                 llistaReceivers.add(r);

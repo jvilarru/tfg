@@ -7,18 +7,19 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
@@ -416,53 +417,76 @@ public class Finestra extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         DatagramSocket socket = new DatagramSocket();
-        byte buf[] = new byte[1024];
+        byte buf[] = new byte[client.Client.BUFF_LEN];
         boolean found = false;
         String server_name = "Halfonso";
-        DatagramPacket paquet = new DatagramPacket(buf, 1024);
-        Enumeration<NetworkInterface> networkInterfaces;
-        networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        if (networkInterfaces != null) {
-            while (networkInterfaces.hasMoreElements()) {
-                NetworkInterface iface = networkInterfaces.nextElement();
-                if (iface.isUp() && !iface.isLoopback()) {
-                    List<InterfaceAddress> inetAddresses = iface.getInterfaceAddresses();
-                    if (!inetAddresses.isEmpty()){
-                        for (int i = 0; i < inetAddresses.size() && !found;i++) {
-                            InterfaceAddress iaddress = inetAddresses.get(i);
-                            InetAddress bcst = iaddress.getBroadcast();
-                            if(bcst != null){
-                                found = true;
-                                paquet.setAddress(bcst);
-                                paquet.setData(server_name.getBytes());
-                                paquet.setLength(server_name.getBytes().length);
-                                paquet.setPort(8888);
-                                socket.setBroadcast(true);
-                                socket.send(paquet);
-                                //PROVA
-                                DatagramPacket pack = new DatagramPacket(buf, 1024);
-                                socket.receive(pack);
-                                
-                                //FI-PROVA
-                            }
-                        }
-                    }
-                }
-            }
+        DatagramPacket paquet = new DatagramPacket(buf, client.Client.BUFF_LEN);
+//        Enumeration<NetworkInterface> networkInterfaces;
+//        networkInterfaces = NetworkInterface.getNetworkInterfaces();
+//        if (networkInterfaces != null) {
+//            while (networkInterfaces.hasMoreElements()) {
+//                NetworkInterface iface = networkInterfaces.nextElement();
+//                if (iface.isUp() && !iface.isLoopback()) {
+//                    List<InterfaceAddress> inetAddresses = iface.getInterfaceAddresses();
+//                    if (!inetAddresses.isEmpty()){
+//                        for (int i = 0; i < inetAddresses.size() && !found;i++) {
+//                            InterfaceAddress iaddress = inetAddresses.get(i);
+//                            InetAddress bcst = iaddress.getBroadcast();
+//                            if(bcst != null){
+//                                found = true;
+//                                paquet.setAddress(bcst);
+//                                paquet.setData(server_name.getBytes());
+//                                paquet.setLength(server_name.getBytes().length);
+//                                paquet.setPort(client.Client.port);
+//                                socket.setBroadcast(true);
+//                                socket.send(paquet);
+//                                //PROVA
+//                                DatagramPacket pack = new DatagramPacket(buf, 1024);
+//                                socket.receive(pack);
+//                                
+//                                //FI-PROVA
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        InetAddress localHost = InetAddress.getLoopbackAddress();
+        System.out.println(localHost.getHostAddress());
+        paquet.setAddress(localHost);
+        paquet.setData(server_name.getBytes());
+        paquet.setLength(server_name.getBytes().length);
+        paquet.setPort(client.Client.port);
+        socket.setBroadcast(true);
+        socket.send(paquet);
+        socket.receive(paquet);
+        System.out.println(new String(paquet.getData(),0,paquet.getLength()));
+        Socket s = new Socket();
+        s.connect(paquet.getSocketAddress());
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        PrintStream out = new PrintStream(s.getOutputStream());
+        String line = in.readLine();
+        while (!line.equalsIgnoreCase("STOP")){
+            out.println(line);
+            out.flush();
+            line = in.readLine();
         }
+        out.println(line);
+        s.close();
+        
         
         /*
-         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new finestra().setVisible(true);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+        try {
+        new finestra().setVisible(true);
+        } catch (FileNotFoundException ex) {
+        Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+        Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
         });*/
         //</editor-fold>
 

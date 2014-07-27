@@ -44,6 +44,7 @@ public class Client {
         while ((line = in.readLine()) != null && line.length() != 0){
             if (line.equalsIgnoreCase("STOP")){
                 c.stop();
+                System.exit(1);
             }
         }
     }
