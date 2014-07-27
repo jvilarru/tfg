@@ -1,9 +1,13 @@
 package client;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class receiver implements Runnable {
 
@@ -18,25 +22,23 @@ public class receiver implements Runnable {
     private InputStream in;
     private OutputStream out;
 
-    public receiver(int port_num, String server_name, InetAddress server_ip) {
+    public receiver(int port_num, String server_name) {
         this.port_num = port_num;
         this.server_name = server_name;
-        this.server_ip = server_ip;
     }
 
     @Override
     public void run() {
-//        try {
-//            sock = new Socket();
-//            SocketChannel channel = sock.getChannel();
-//            channel.
-//            in = sock.getInputStream();
-//            out = sock.getOutputStream();
-////            anar llegint per anar executant el que em manin
-//            sock.
-//        } catch (IOException ex) {
-//            Logger.getLogger(receiver.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            ServerSocket so = new ServerSocket(port_num);
+            Socket accept = so.accept();
+            InetAddress localAddress = accept.getLocalAddress();
+            int localPort = accept.getLocalPort();
+            System.out.println("Ip --> " + localAddress.getHostAddress() + ":" + localPort);
+            System.exit(1);
+        } catch (IOException ex) {
+            Logger.getLogger(receiver.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

@@ -77,6 +77,10 @@ public class Listener implements Runnable {
 //                receiver r = new receiver(portPool, local_ip, address,address);
 //                llistaServers.add(r);
 //                r.start();
+                //Fer el ServerSocket accept en el mateix port i llavors crear
+                //un receiver amb el Socket ja creat, el cual rebra missatges
+                //a traves de aquest socket i es tancara quan el server o el Pare
+                //(this) li ho diguin
                 System.out.println("Acabo de crear un receiver per al server " + server_name + " amb la direccio " + address.getHostAddress());
                 System.out.println("Aquest receiver esta bindejat a l'adreça " + sock.getInetAddress().getHostAddress() + ":" + portPool);
                 portPool++;
