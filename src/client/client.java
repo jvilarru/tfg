@@ -14,6 +14,7 @@ public class client {
     public static final int DEBUG = 1;
     public static final int RELEASE = 0;
     public static int mode;
+    public static final int BUFF_LEN = 1024;
     private Listener list;
     
 

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -12,15 +14,13 @@ import java.util.logging.Logger;
 
 public class Listener implements Runnable {
    
-    private int portPool;
-    private DatagramSocket sock;
+    private DatagramSocket Usock;
+    private ServerSocket Ssock;
     private DatagramPacket pack;
     
     private ArrayList<receiver> llistaReceivers;
     private boolean running;
     private Thread t;
-    private byte[] buff;
-    private static final int BUFF_LEN=1024;
 
     public Listener(){
         llistaReceivers = new ArrayList<>();
@@ -28,10 +28,10 @@ public class Listener implements Runnable {
 
     public void stop() {
         running = false;
-        sock.close();
-//        for (receiver recv : llistaReceivers) {
-//            recv.stop();
-//        }
+        Usock.close();
+        for (receiver recv : llistaReceivers) {
+            recv.stop();
+        }
     }
 
     public void start() {
@@ -42,50 +42,29 @@ public class Listener implements Runnable {
 
     @Override
     public void run() {
+        byte[] buff;
         try {
-            this.sock = new DatagramSocket(client.port, InetAddress.getByName("0.0.0.0"));
-            buff = new byte[BUFF_LEN];
-            this.pack = new DatagramPacket(buff, BUFF_LEN);
+            this.Usock = new DatagramSocket(client.port, InetAddress.getByName("0.0.0.0"));
+            this.Ssock = new ServerSocket(client.port);
+            buff = new byte[client.BUFF_LEN];
+            this.pack = new DatagramPacket(buff, client.BUFF_LEN);
             while (running) {
-                sock.receive(pack);
-                //tractament de paquet
-                System.out.println("l'he rebut");
-                System.exit(1);
-                String server_name = new String(pack.getData(), 0, pack.getLength());
-                //protocol de conexio(prepararho per a errors)
+                Usock.receive(pack);
+                String server_name = new String(pack.getData());
+                //ficar-hi merda de seguretat del pal clau publica i tal
                 SocketAddress socketAddress = pack.getSocketAddress();
-                InetAddress address = pack.getAddress();
                 pack.setSocketAddress(socketAddress);
-                byte[] name = client.name.getBytes();
-                byte[] IP = sock.getInetAddress().getHostAddress().getBytes();
-                byte[] portMessages = ("" + portPool).getBytes();
-                byte[] message = new byte[name.length + IP.length + portMessages.length + 3];
-                message[0] = (byte) name.length;
-                System.arraycopy(name, 0, message, 1, name.length);
-                message[name.length + 1] = (byte) IP.length;
-                System.arraycopy(IP, 0, message, name.length + 2, IP.length);
-                message[name.length + 1 + IP.length + 1] = (byte) portMessages.length;
-                System.arraycopy(portMessages, 0, message, name.length + 1 + IP.length + 2, portMessages.length);
-                //explicar server com conectar(donarli port)
-                pack.setData(message);
-                pack.setLength(message.length);
+                pack.setData(client.name.getBytes());
+                pack.setLength(client.name.getBytes().length);
                 try {
-                    sock.send(pack);
+                    Usock.send(pack);
                 } catch (IOException ex) {
                     Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
                 }
-//                receiver r = new receiver(portPool, local_ip, address,address);
-//                llistaServers.add(r);
-//                r.start();
-                //Fer el ServerSocket accept en el mateix port i llavors crear
-                //un receiver amb el Socket ja creat, el cual rebra missatges
-                //a traves de aquest socket i es tancara quan el server o el Pare
-                //(this) li ho diguin
-                System.out.println("Acabo de crear un receiver per al server " + server_name + " amb la direccio " + address.getHostAddress());
-                System.out.println("Aquest receiver esta bindejat a l'adreça " + sock.getInetAddress().getHostAddress() + ":" + portPool);
-                portPool++;
-
-                //creacio de receiver amb server_name+server_ip+port+local_ip               
+                Socket s = Ssock.accept();
+                receiver r = new receiver(server_name, s);
+                llistaReceivers.add(r);
+                r.start();
             }
         } catch (SocketException ex) {
             if(running){
