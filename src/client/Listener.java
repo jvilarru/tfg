@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class Listener implements Runnable {
     private ServerSocket Ssock;
     private DatagramPacket pack;
     
-    private ArrayList<receiver> llistaReceivers;
+    private final ArrayList<Receiver> llistaReceivers;
     private boolean running;
     private Thread t;
 
@@ -26,10 +25,10 @@ public class Listener implements Runnable {
         llistaReceivers = new ArrayList<>();
     }
 
-    public void stop() {
+    public void stop() throws IOException {
         running = false;
         Usock.close();
-        for (receiver recv : llistaReceivers) {
+        for (Receiver recv : llistaReceivers) {
             recv.stop();
         }
     }
@@ -43,28 +42,39 @@ public class Listener implements Runnable {
     @Override
     public void run() {
         byte[] buff;
+        String server_name;
         try {
-            this.Usock = new DatagramSocket(client.port, InetAddress.getByName("0.0.0.0"));
-            this.Ssock = new ServerSocket(client.port);
-            buff = new byte[client.BUFF_LEN];
-            this.pack = new DatagramPacket(buff, client.BUFF_LEN);
+            this.Usock = new DatagramSocket(Client.port, InetAddress.getByName("0.0.0.0"));
+            this.Ssock = new ServerSocket(Client.port);
+            buff = new byte[Client.BUFF_LEN];
+            this.pack = new DatagramPacket(buff, Client.BUFF_LEN);
             while (running) {
+                //REBRE PAQUETS UDP
                 Usock.receive(pack);
-                String server_name = new String(pack.getData());
+                server_name = new String(pack.getData());
                 //ficar-hi merda de seguretat del pal clau publica i tal
+                //CAL?
                 SocketAddress socketAddress = pack.getSocketAddress();
                 pack.setSocketAddress(socketAddress);
-                pack.setData(client.name.getBytes());
-                pack.setLength(client.name.getBytes().length);
+                //FI-CAL?
+                pack.setData(Client.name.getBytes());
+                //CAL?
+                pack.setLength(Client.name.getBytes().length);
+                //FI-CAL?
+                //FI-REBRE PAQUETS UDP
+                //CONTESTAR-SERVER
                 try {
                     Usock.send(pack);
                 } catch (IOException ex) {
                     Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                Socket s = Ssock.accept();
-                receiver r = new receiver(server_name, s);
-                llistaReceivers.add(r);
+                //FI-CONTESTAR-SERVER
+                //Esperar connexio i al rebre crear un receiver amb el nou socket
+                //i afegirlo a la llista per a si s'ha de tancar, al mateix 
+                //temps que l'arranquem
+                Receiver r = new Receiver(server_name, Ssock.accept());
                 r.start();
+                llistaReceivers.add(r);
             }
         } catch (SocketException ex) {
             if(running){
