@@ -9,14 +9,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Receiver implements Runnable {
-    private String server_name;
-    private Socket sock;
+    private final String server_name;
+    private final Socket sock;
     private boolean running = false;
     private Thread t;
 
     public Receiver(String server_name, Socket sock) {
         this.sock = sock;
         this.server_name = server_name;
+    }
+    
+    public boolean areYou(String name){
+        return name.equals(server_name);
     }
 
     @Override

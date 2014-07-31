@@ -52,30 +52,38 @@ public class Listener implements Runnable {
                 //REBRE PAQUETS UDP
                 Usock.receive(pack);
                 server_name = new String(pack.getData());
-                //ficar-hi merda de seguretat del pal clau publica i tal
-                //CAL?
-                SocketAddress socketAddress = pack.getSocketAddress();
-                pack.setSocketAddress(socketAddress);
-                //FI-CAL?
-                pack.setData(Client.name.getBytes());
-                //CAL?
-                pack.setLength(Client.name.getBytes().length);
-                //FI-CAL?
-                //FI-REBRE PAQUETS UDP
-                //CONTESTAR-SERVER
-                try {
-                    Usock.send(pack);
-                } catch (IOException ex) {
-                    Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
+                boolean alreadyInUse = false;
+                for (Receiver r:llistaReceivers){
+                    if (r.areYou(server_name)){
+                        alreadyInUse = true;
+                    }
                 }
-                //FI-CONTESTAR-SERVER
-                //Esperar connexio i al rebre crear un receiver amb el nou socket
-                //i afegirlo a la llista per a si s'ha de tancar, al mateix 
-                //temps que l'arranquem
-                System.out.println("LISTENER\n\tCreo un receiver amb nom -->" + Client.name);
-                Receiver r = new Receiver(server_name, Ssock.accept());
-                r.start();
-                llistaReceivers.add(r);
+                if (!alreadyInUse){
+                    //ficar-hi merda de seguretat del pal clau publica i tal
+                    //CAL?
+                    SocketAddress socketAddress = pack.getSocketAddress();
+                    pack.setSocketAddress(socketAddress);
+                    //FI-CAL?
+                    pack.setData(Client.name.getBytes());
+                    //CAL?
+                    pack.setLength(Client.name.getBytes().length);
+                    //FI-CAL?
+                    //FI-REBRE PAQUETS UDP
+                    //CONTESTAR-SERVER
+                    try {
+                        Usock.send(pack);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //FI-CONTESTAR-SERVER
+                    //Esperar connexio i al rebre crear un receiver amb el nou socket
+                    //i afegirlo a la llista per a si s'ha de tancar, al mateix 
+                    //temps que l'arranquem
+                    System.out.println("LISTENER\n\tCreo un receiver amb nom -->" + Client.name);
+                    Receiver r = new Receiver(server_name, Ssock.accept());
+                    r.start();
+                    llistaReceivers.add(r);
+                }
             }
         } catch (SocketException ex) {
             if(running){

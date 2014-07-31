@@ -9,12 +9,12 @@ import java.net.UnknownHostException;
 public class Client {
 
     
-    public static int port = 8888;
-    public static String name = "Halfonso";
+    public static final int port = 8888;
     public static final int DEBUG = 1;
     public static final int RELEASE = 0;
-    public static int mode;
     public static final int BUFF_LEN = 1024;
+    public static int mode;
+    public static String name = "Halfonso";
     private Listener list;
     
 
@@ -33,9 +33,6 @@ public class Client {
             } catch (UnknownHostException ex) {
                 name = name + (int)(Math.random() * 100.0);
             }
-        }
-        if (args.length >= 3) {
-            port = Integer.parseInt(args[2]);
         }
         c = new Client();
         c.start();
