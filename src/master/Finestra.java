@@ -7,19 +7,15 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
@@ -42,7 +38,6 @@ public class Finestra extends javax.swing.JFrame {
         initComponents();
         model = new DefaultListModel<>();
         jList1.setModel(model);
-        System.out.println("Start-> ts=" + System.currentTimeMillis());
         jSlider1.setMaximum(100);
         BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
         ArrayList<rawData> linia;
@@ -76,7 +71,10 @@ public class Finestra extends javax.swing.JFrame {
             line = br.readLine();
         }
         br.close();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        Dimension screenSize = new Dimension();
+        screenSize.height = gd.getDisplayMode().getHeight();
+        screenSize.width = gd.getDisplayMode().getWidth();
         setSize(screenSize);
         teclat.setSize(screenSize.width, screenSize.height - 27);
         screenSize = teclat.getSize();
@@ -359,7 +357,7 @@ public class Finestra extends javax.swing.JFrame {
         if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
             jSlider1.setEnabled(false);
             jLabel1.setEnabled(false);
-            System.out.println("Transparencia no suportada per el sistema operatiu");
+            System.err.println("Transparencia no suportada per el sistema operatiu");
         } else{
             setOpacity((float) (jSlider1.getValue() / 100.0));
         }
@@ -369,26 +367,26 @@ public class Finestra extends javax.swing.JFrame {
         float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
         float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
         tauletaGrafica.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        System.out.println("CLICKED");
-        System.out.println("x-> " + auxX);
-        System.out.println("y-> " + auxY);
-        System.out.println("button-> " + evt.getButton());
+        System.out.print("PRESSED");
+        System.out.print("\tx-> " + auxX);
+        System.out.print("\ty-> " + auxY);
+        System.out.println("\tbutton-> " + evt.getButton());
         tauleta_clicked = true;
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void jPanel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseReleased
         tauleta_clicked = false;
         tauletaGrafica.setCursor(Cursor.getDefaultCursor());
-        System.out.println("RELEASED");
-        System.out.println("button-> " + evt.getButton());
+        System.out.print("RELEASED");
+        System.out.println("\tbutton-> " + evt.getButton());
     }//GEN-LAST:event_jPanel2MouseReleased
 
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
         float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
         float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
-        System.out.println("MOVED");
-        System.out.println("x-> " + auxX);
-        System.out.println("y-> " + auxY);
+        System.out.print("MOVED");
+        System.out.print("\t x-> " + auxX);
+        System.out.println("\t y-> " + auxY);
     }//GEN-LAST:event_jPanel2MouseDragged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -416,11 +414,11 @@ public class Finestra extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Finestra.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        DatagramSocket socket = new DatagramSocket();
-        byte buf[] = new byte[client.Client.BUFF_LEN];
-        boolean found = false;
-        String server_name = "Halfonso";
-        DatagramPacket paquet = new DatagramPacket(buf, client.Client.BUFF_LEN);
+//        DatagramSocket socket = new DatagramSocket();
+//        byte buf[] = new byte[client.Client.BUFF_LEN];
+//        boolean found = false;
+//        String server_name = "Halfonso";
+//        DatagramPacket paquet = new DatagramPacket(buf, client.Client.BUFF_LEN);
 //        Enumeration<NetworkInterface> networkInterfaces;
 //        networkInterfaces = NetworkInterface.getNetworkInterfaces();
 //        if (networkInterfaces != null) {
@@ -451,43 +449,42 @@ public class Finestra extends javax.swing.JFrame {
 //                }
 //            }
 //        }
-        InetAddress localHost = InetAddress.getLoopbackAddress();
-        System.out.println(localHost.getHostAddress());
-        paquet.setAddress(localHost);
-        paquet.setData(server_name.getBytes());
-        paquet.setLength(server_name.getBytes().length);
-        paquet.setPort(client.Client.port);
-        socket.setBroadcast(true);
-        socket.send(paquet);
-        socket.receive(paquet);
-        System.out.println(new String(paquet.getData(),0,paquet.getLength()));
-        Socket s = new Socket();
-        s.connect(paquet.getSocketAddress());
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        PrintStream out = new PrintStream(s.getOutputStream());
-        String line = in.readLine();
-        while (!line.equalsIgnoreCase("STOP")){
-            out.println(line);
-            out.flush();
-            line = in.readLine();
-        }
-        out.println(line);
-        s.close();
+//        InetAddress localHost = InetAddress.getLoopbackAddress();
+//        System.out.println(localHost.getHostAddress());
+//        paquet.setAddress(localHost);
+//        paquet.setData(server_name.getBytes());
+//        paquet.setLength(server_name.getBytes().length);
+//        paquet.setPort(client.Client.port);
+//        socket.setBroadcast(true);
+//        socket.send(paquet);
+//        socket.receive(paquet);
+//        System.out.println(new String(paquet.getData(),0,paquet.getLength()));
+//        Socket s = new Socket();
+//        s.connect(paquet.getSocketAddress());
+//        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+//        PrintStream out = new PrintStream(s.getOutputStream());
+//        String line = in.readLine();
+//        while (!line.equalsIgnoreCase("STOP")){
+//            out.println(line);
+//            out.flush();
+//            line = in.readLine();
+//        }
+//        out.println(line);
+//        s.close();
         
         
-        /*
         java.awt.EventQueue.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-        try {
-        new finestra().setVisible(true);
-        } catch (FileNotFoundException ex) {
-        Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-        Logger.getLogger(finestra.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-        });*/
+            @Override
+            public void run() {
+                try {
+                    new Finestra().setVisible(true);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Finestra.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Finestra.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
         //</editor-fold>
 
     }

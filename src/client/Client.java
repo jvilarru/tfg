@@ -45,6 +45,7 @@ public class Client {
             if (line.equalsIgnoreCase("STOP")){
                 c.stop();
                 System.exit(1);
+
             }
         }
     }
