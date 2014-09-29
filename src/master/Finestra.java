@@ -123,6 +123,8 @@ public class Finestra extends javax.swing.JFrame {
         left_button.setSize((int) (screenSize.width * 0.4), left_button.getSize().height);
         middle_button.setSize((int) (screenSize.width * 0.2), middle_button.getSize().height);
         right_button.setSize((int) (screenSize.width * 0.4), right_button.getSize().height);
+        jTabbedPane1.add(new JPanel(), 0);
+        jTabbedPane1.getComponentAt(0).setName("test");
     }
 
     @SuppressWarnings("unchecked")
@@ -412,8 +414,7 @@ public class Finestra extends javax.swing.JFrame {
                         ArrayList<InterfaceAddress> inetAddresses = (ArrayList<InterfaceAddress>) iface.getInterfaceAddresses();
                         if (!inetAddresses.isEmpty()){
                             for (int i = 0; i < inetAddresses.size() && !found;i++) {
-                                InterfaceAddress iaddress = inetAddresses.get(i);
-                                InetAddress bcst = iaddress.getBroadcast();
+                                InetAddress bcst = inetAddresses.get(i).getBroadcast();
                                 if(bcst != null){
                                     found = true;
                                     scanPack.setAddress(bcst);
@@ -432,7 +433,6 @@ public class Finestra extends javax.swing.JFrame {
                                                 model.addElement(client_name);
                                                 Emiter e = new Emiter(scanPack.getSocketAddress(), client_name);
                                                 llista.add(e);
-                                                e.start();
                                             }
                                         }
                                         catch(SocketTimeoutException ex){
@@ -487,7 +487,6 @@ public class Finestra extends javax.swing.JFrame {
 //        }
 //        out.println(line);
 //        s.close();
-        
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

@@ -43,6 +43,9 @@ public class Client {
                 c.stop();
                 System.exit(1);
             }
+            else {
+                System.out.println("List of commands avaiable:\n\tSTOP:\t It stops the program.\n");
+            }
         }
     }
 
