@@ -88,6 +88,7 @@ public class Tecla extends JButton implements ActionListener {
             splited = lineToParse.split(",");
         }
         title = splited[0];
+        //TODO fer-ho amb arxiu de configuracio
         if (title.equalsIgnoreCase("menu")) {
             icona = new ImageIcon("images/menu.png");
         } else if (title.equalsIgnoreCase("win")) {
@@ -95,6 +96,7 @@ public class Tecla extends JButton implements ActionListener {
         } else if (title.equalsIgnoreCase("shift")) {
             icona = new ImageIcon("images/shift.png");
         }
+        
         if (icona != null) {
             setText("");
             Image scaledInstance = icona.getImage().getScaledInstance((int) (size.width * (float) 0.8), (int) (size.height * (float) 0.8), Image.SCALE_SMOOTH);
@@ -103,6 +105,7 @@ public class Tecla extends JButton implements ActionListener {
         } else {
             setText(title);
         }
+        //FI-TODO
         shiftTitle = splited[1];
         altTitle = splited[2];
         String max = (title.length() >= shiftTitle.length()) ? title : shiftTitle;

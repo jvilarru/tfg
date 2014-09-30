@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -21,112 +18,92 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.GroupLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Finestra extends javax.swing.JFrame {
 
     private final String defaultLayout = "layoutES.ser";
-    private ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
     private boolean tauleta_clicked = false;
     private DefaultListModel<String> model;
     private ArrayList<Emiter> llista;
     private String name = "Server";
-    
+
     private DatagramSocket scanSock;
     private DatagramPacket scanPack;
     private byte[] scanBuff;
+    private Teclat teclat;
 
     private class rawData {
+
         public String datos;
         public double relWidth, relHeight;
         public Tecla tecla;
     }
 
-    public Finestra() throws FileNotFoundException, IOException {
-        ArrayList<Double> tamanys = new ArrayList<>();
+//    private ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
+//    private ArrayList<Double> tamanys = new ArrayList<>();
+
+    public Finestra() throws SocketException, IOException {
+//        ArrayList<Double> tamanys = new ArrayList<>();
         llista = new ArrayList();
         scanSock = new DatagramSocket();
         scanBuff = new byte[client.Client.BUFF_LEN];
         scanPack = new DatagramPacket(scanBuff, client.Client.BUFF_LEN);
-        initComponents();
-        model = new DefaultListModel<>();
-        jList1.setModel(model);
-        jSlider1.setMaximum(100);
-        BufferedReader br = new BufferedReader(new FileReader(defaultLayout));
-        ArrayList<rawData> linia;
-        rawData raw;
-        int i = 0;
-        String line = br.readLine();
-        while (line != null) {
-            linia = new ArrayList<>();
-            tamanys.add(0.0);
-            while (line != null && !line.equals("NEWLINE")) {
-                raw = new rawData();
-                String[] split;
-                String[] size;
-                if (line.startsWith("\\")) {
-                    split = line.split(">");
-                    size = split[1].split("<");
-                } else {
-                    split = line.split(";");
-                    size = split[1].split(",");
-                }
-                raw.datos = split[0];
-                raw.relWidth = Double.parseDouble(size[0]);
-                raw.relHeight = Double.parseDouble(size[1]);
-                Double get = tamanys.get(i) + Double.parseDouble(size[0]);
-                tamanys.set(i, get);
-                linia.add(raw);
-                line = br.readLine();
-            }
-            matriu.add(linia);
-            i++;
-            line = br.readLine();
-        }
-        br.close();
+
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         Dimension screenSize = new Dimension();
         screenSize.height = gd.getDisplayMode().getHeight();
         screenSize.width = gd.getDisplayMode().getWidth();
-        setSize(screenSize);
-        teclat.setSize(screenSize.width, screenSize.height - 27);
-        screenSize = teclat.getSize();
-        int num_files = matriu.size();
-        Tecla.minFontSize = new float[20];
-        for (i = 0; i < 20; i++) {
-            Tecla.minFontSize[i] = (float) 200.0;
-        }
-        for (i = 0; i < num_files; i++) {
-            linia = matriu.get(i);
-            Double width_size = tamanys.get(i);
-            double accum = 0.0;
-            for (rawData linia1 : linia) {
-                if (!linia1.datos.equals("EMPTY")) {
-                    Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
-                    Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
-                    linia1.tecla = new Tecla(linia1.datos, dim, p, i);
-                    teclat.add(linia1.tecla);
-                }
-                accum += linia1.relWidth;
-            }
-        }
-        for (i = 0; i < num_files; i++) {
-            for (rawData linia1 : matriu.get(i)) {
-                Tecla t = linia1.tecla;
-                if (t != null) {
-                    t.setFontSize(t.getTitle().length());
-                }
 
-            }
-        }
+
+        
+        
+        
+        
+        initComponents();
+                setSize(screenSize);
+        setSize(screenSize);
+        model = new DefaultListModel<>();
+        jList1.setModel(model);
+        jSlider1.setMaximum(100);
+        
+        teclat = new Teclat();
+        teclat.setName("Teclat");
+
+        GroupLayout teclatLayout = new GroupLayout(teclat);
+        teclat.setLayout(teclatLayout);
+        teclatLayout.setHorizontalGroup(
+            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 699, Short.MAX_VALUE)
+        );
+        teclatLayout.setVerticalGroup(
+            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 365, Short.MAX_VALUE)
+        );
+        jTabbedPane1.add(teclat, 0);
+        jTabbedPane1.setSelectedIndex(0);
+        teclat.setSize(screenSize.width, screenSize.height-50);
+        teclat.prepareKeys(defaultLayout);
+        
+        
+        
+//        teclat.setSize(screenSize.width, screenSize.height-200);
+        
+        screenSize = teclat.getSize();
+        
+        
+        teclat.printKeys(screenSize);
+        
+        
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
-        left_button.setSize((int) (screenSize.width * 0.4), left_button.getSize().height);
-        middle_button.setSize((int) (screenSize.width * 0.2), middle_button.getSize().height);
-        right_button.setSize((int) (screenSize.width * 0.4), right_button.getSize().height);
-        jTabbedPane1.add(new JPanel(), 0);
-        jTabbedPane1.getComponentAt(0).setName("test");
+//        left_button.setSize((int) (screenSize.width * 0.4), left_button.getSize().height);
+//        middle_button.setSize((int) (screenSize.width * 0.2), middle_button.getSize().height);
+//        right_button.setSize((int) (screenSize.width * 0.4), right_button.getSize().height);
+        left_button.setLocation(0, left_button.getLocation().y-50);
     }
 
     @SuppressWarnings("unchecked")
@@ -134,7 +111,6 @@ public class Finestra extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        teclat = new javax.swing.JPanel();
         trackpad = new javax.swing.JPanel();
         left_button = new javax.swing.JButton();
         right_button = new javax.swing.JButton();
@@ -163,23 +139,6 @@ public class Finestra extends javax.swing.JFrame {
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("tabs"); // NOI18N
 
-        teclat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        teclat.setName("teclat"); // NOI18N
-        teclat.setOpaque(false);
-
-        javax.swing.GroupLayout teclatLayout = new javax.swing.GroupLayout(teclat);
-        teclat.setLayout(teclatLayout);
-        teclatLayout.setHorizontalGroup(
-            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        teclatLayout.setVerticalGroup(
-            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Teclat", teclat);
-
         trackpad.setOpaque(false);
 
         left_button.setName("left_button"); // NOI18N
@@ -204,12 +163,11 @@ public class Finestra extends javax.swing.JFrame {
         trackpadLayout.setHorizontalGroup(
             trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(trackpadLayout.createSequentialGroup()
-                .addComponent(left_button, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(left_button, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(middle_button, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(middle_button, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(right_button, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(right_button, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         trackpadLayout.setVerticalGroup(
@@ -373,13 +331,13 @@ public class Finestra extends javax.swing.JFrame {
             jSlider1.setEnabled(false);
             jLabel1.setEnabled(false);
             System.err.println("Transparencia no suportada per el sistema operatiu");
-        } else{
+        } else {
             setOpacity((float) (jSlider1.getValue() / 100.0));
         }
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MousePressed
-        float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
+        float auxX = (float) evt.getX() / (float) (((JPanel) evt.getSource()).getWidth());
         float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
         tauletaGrafica.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         System.out.print("PRESSED");
@@ -397,7 +355,7 @@ public class Finestra extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MouseReleased
 
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
-        float auxX = (float)evt.getX() / (float)(((JPanel)evt.getSource()).getWidth());
+        float auxX = (float) evt.getX() / (float) (((JPanel) evt.getSource()).getWidth());
         float auxY = (float) evt.getY() / (float) (((JPanel) evt.getSource()).getHeight());
         System.out.print("MOVED");
         System.out.print("\t x-> " + auxX);
@@ -414,10 +372,10 @@ public class Finestra extends javax.swing.JFrame {
                     NetworkInterface iface = networkInterfaces.nextElement();
                     if (iface.isUp() && !iface.isLoopback()) {
                         ArrayList<InterfaceAddress> inetAddresses = (ArrayList<InterfaceAddress>) iface.getInterfaceAddresses();
-                        if (!inetAddresses.isEmpty()){
-                            for (int i = 0; i < inetAddresses.size() && !found;i++) {
+                        if (!inetAddresses.isEmpty()) {
+                            for (int i = 0; i < inetAddresses.size() && !found; i++) {
                                 InetAddress bcst = inetAddresses.get(i).getBroadcast();
-                                if(bcst != null){
+                                if (bcst != null) {
                                     found = true;
                                     scanPack.setAddress(bcst);
                                     scanPack.setData(name.getBytes());
@@ -427,17 +385,16 @@ public class Finestra extends javax.swing.JFrame {
                                     scanSock.send(scanPack);
                                     scanSock.setSoTimeout(1000);
                                     boolean timeout = false;
-                                    while(!timeout){
-                                        try{
+                                    while (!timeout) {
+                                        try {
                                             scanSock.receive(scanPack);
                                             String client_name = new String(scanPack.getData(), 0, scanPack.getLength());
-                                            if(!model.contains(client_name)){
+                                            if (!model.contains(client_name)) {
                                                 model.addElement(client_name);
                                                 Emiter e = new Emiter(scanPack.getSocketAddress(), client_name);
                                                 llista.add(e);
                                             }
-                                        }
-                                        catch(SocketTimeoutException ex){
+                                        } catch (SocketTimeoutException ex) {
                                             timeout = true;
                                         }
                                     }
@@ -447,7 +404,7 @@ public class Finestra extends javax.swing.JFrame {
                     }
                 }
             }
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Finestra.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -524,17 +481,17 @@ public class Finestra extends javax.swing.JFrame {
 //        }
 //        out.println(line);
 //        s.close();
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 try {
                     new Finestra().setVisible(true);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Finestra.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(Finestra.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
             }
         });
         //</editor-fold>
@@ -560,7 +517,6 @@ public class Finestra extends javax.swing.JFrame {
     private javax.swing.JButton middle_button;
     private javax.swing.JButton right_button;
     private javax.swing.JPanel tauletaGrafica;
-    private javax.swing.JPanel teclat;
     private javax.swing.JPanel trackpad;
     // End of variables declaration//GEN-END:variables
 }
