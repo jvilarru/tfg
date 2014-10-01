@@ -1,5 +1,6 @@
 package master;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -30,6 +31,7 @@ public class Master extends JFrame {
 
     private Teclat teclat;
     private Trackpad trackpad;
+    private TauletaGrafica tgrafica;
 
     public Master() throws IOException {
         super("SER");
@@ -56,18 +58,7 @@ public class Master extends JFrame {
             }
         }
         setVisible(true);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-//        Frame frame = new Frame(null)
-//        Dimension screenSize = new Dimension();
-//        setLocation(new Point(0, 0));
-//        screenSize.height = gd.getDisplayMode().getHeight();
-//        screenSize.width = gd.getDisplayMode().getWidth();
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        setUndecorated(true);
-//        setResizable(false);
-//        setVisible(true);
         tabs = new JTabbedPane();
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,24 +70,30 @@ public class Master extends JFrame {
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(tabs, javax.swing.GroupLayout.Alignment.TRAILING)
         );
-//        setSize(screenSize);
         setName("SER");
-        pack();
+        
+        
         Dimension screenSize = getSize();
+        screenSize.height-=30;
 
         //INIT TABS
         tabs.setFocusable(false);
 
         teclat = new Teclat(defaultLayout, screenSize);
         trackpad = new Trackpad(screenSize);
+        tgrafica = new TauletaGrafica(screenSize);
+        
 
-        tabs.add(teclat, 0);
-        tabs.add(trackpad, 1);
+        tabs.add(teclat);
+        tabs.add(trackpad);
+        tabs.add(tgrafica);
+        
         tabs.setSelectedIndex(0);
 
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
+        pack();
 
     }
 

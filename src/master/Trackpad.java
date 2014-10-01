@@ -20,24 +20,23 @@ public class Trackpad extends JPanel {
         setLayout(l);
 
         left = new JButton();
-        left.setSize((int) (dim.width * 0.4), (int) (dim.height * 0.1));
-        left.setLocation(0, (int) (dim.height * 0.9));
+        left.setSize((int) (dim.width * 0.4), (int) (dim.height * 0.12));
+        left.setLocation(0, (int) (dim.height * 0.88));
         add(left);
 
         center = new JButton();
-        center.setSize((int) (dim.width * 0.2), (int) (dim.height * 0.1));
-        center.setLocation((int) (dim.width * 0.4), (int) (dim.height * 0.9));
+        center.setSize((int) (dim.width * 0.2), (int) (dim.height * 0.12));
+        center.setLocation((int) (dim.width * 0.4), (int) (dim.height * 0.88));
         add(center);
 
         right = new JButton();
-        right.setSize((int) (dim.width * 0.4), (int) (dim.height * 0.1));
-        right.setLocation((int) (dim.width * 0.6), (int) (dim.height * 0.9));
+        right.setSize((int) (dim.width * 0.4), (int) (dim.height * 0.12));
+        right.setLocation((int) (dim.width * 0.6), (int) (dim.height * 0.88));
         add(right);
 
         panel = new JPanel();
-        panel.setSize(dim.width, (int) (dim.height * 0.9));
+        panel.setSize(dim.width, (int) (dim.height * 0.88));
         panel.setLocation(0, 0);
         add(panel);
-
     }
 }
