@@ -25,6 +25,8 @@ public class Teclat extends JPanel {
     public Teclat(String layout, Dimension dim) throws IOException {
         super();
         setName("Teclat");
+        setSize(dim);
+        setPreferredSize(dim);
 
         GroupLayout teclatLayout = new GroupLayout(this);
         setLayout(teclatLayout);

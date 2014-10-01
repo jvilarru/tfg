@@ -13,6 +13,7 @@ public class Trackpad extends JPanel {
     public Trackpad(Dimension dim) {
         super();
         setSize(dim);
+        setPreferredSize(dim);
         setName("Trackpad");
 
         GroupLayout l = new GroupLayout(this);
