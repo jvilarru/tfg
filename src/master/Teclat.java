@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 
 public class Teclat extends JPanel {
@@ -21,8 +22,17 @@ public class Teclat extends JPanel {
     private int i;        
     private ArrayList<Double> tamanys = new ArrayList<>();
 
+    public Teclat(String layout, Dimension dim) throws IOException {
+        super();
+        setName("Teclat");
 
-    public void prepareKeys(String layout) throws IOException {
+        GroupLayout teclatLayout = new GroupLayout(this);
+        setLayout(teclatLayout);
+        prepareKeys(layout);
+        printKeys(dim);
+    }
+
+    private void prepareKeys(String layout) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(layout));        
         ArrayList<rawData> linia;
 
@@ -58,7 +68,7 @@ public class Teclat extends JPanel {
         br.close();
     }
     
-    public void printKeys(Dimension screenSize){
+    private void printKeys(Dimension screenSize) {
         ArrayList<rawData> linia;
         int num_files = matriu.size();
         Tecla.minFontSize = new float[20];

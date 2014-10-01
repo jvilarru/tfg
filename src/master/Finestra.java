@@ -4,7 +4,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,8 +17,6 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Finestra extends javax.swing.JFrame {
@@ -34,6 +31,7 @@ public class Finestra extends javax.swing.JFrame {
     private DatagramPacket scanPack;
     private byte[] scanBuff;
     private Teclat teclat;
+    private Trackpad trackpad;
 
     private class rawData {
 
@@ -51,59 +49,34 @@ public class Finestra extends javax.swing.JFrame {
         scanSock = new DatagramSocket();
         scanBuff = new byte[client.Client.BUFF_LEN];
         scanPack = new DatagramPacket(scanBuff, client.Client.BUFF_LEN);
-
+//NO FUNCIONA BE
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         Dimension screenSize = new Dimension();
         screenSize.height = gd.getDisplayMode().getHeight();
         screenSize.width = gd.getDisplayMode().getWidth();
-
-
-        
-        
-        
-        
+//FI 
+        setPreferredSize(screenSize);
         initComponents();
-                setSize(screenSize);
-        setSize(screenSize);
+
+//        setSize(screenSize);
+        screenSize = getSize();
+        screenSize.height -= 35;
         model = new DefaultListModel<>();
         jList1.setModel(model);
         jSlider1.setMaximum(100);
         
-        teclat = new Teclat();
-        teclat.setName("Teclat");
+        teclat = new Teclat(defaultLayout, screenSize);
+        trackpad = new Trackpad(screenSize);
 
-        GroupLayout teclatLayout = new GroupLayout(teclat);
-        teclat.setLayout(teclatLayout);
-        teclatLayout.setHorizontalGroup(
-            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 699, Short.MAX_VALUE)
-        );
-        teclatLayout.setVerticalGroup(
-            teclatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
-        );
+        
         jTabbedPane1.add(teclat, 0);
+        jTabbedPane1.add(trackpad, 1);
         jTabbedPane1.setSelectedIndex(0);
-        teclat.setSize(screenSize.width, screenSize.height-50);
-        teclat.prepareKeys(defaultLayout);
-        
-        
-        
-//        teclat.setSize(screenSize.width, screenSize.height-200);
-        
-        screenSize = teclat.getSize();
-        
-        
-        teclat.printKeys(screenSize);
         
         
         teclat.setFocusable(true);
         teclat.requestFocusInWindow();
         teclat.setFocusTraversalKeysEnabled(false);
-//        left_button.setSize((int) (screenSize.width * 0.4), left_button.getSize().height);
-//        middle_button.setSize((int) (screenSize.width * 0.2), middle_button.getSize().height);
-//        right_button.setSize((int) (screenSize.width * 0.4), right_button.getSize().height);
-        left_button.setLocation(0, left_button.getLocation().y-50);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,11 +84,6 @@ public class Finestra extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        trackpad = new javax.swing.JPanel();
-        left_button = new javax.swing.JButton();
-        right_button = new javax.swing.JButton();
-        middle_button = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
         tauletaGrafica = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -138,51 +106,6 @@ public class Finestra extends javax.swing.JFrame {
 
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setName("tabs"); // NOI18N
-
-        trackpad.setOpaque(false);
-
-        left_button.setName("left_button"); // NOI18N
-
-        right_button.setName("right_button"); // NOI18N
-
-        middle_button.setName("middle_button"); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout trackpadLayout = new javax.swing.GroupLayout(trackpad);
-        trackpad.setLayout(trackpadLayout);
-        trackpadLayout.setHorizontalGroup(
-            trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(trackpadLayout.createSequentialGroup()
-                .addComponent(left_button, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(middle_button, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(right_button, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        trackpadLayout.setVerticalGroup(
-            trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, trackpadLayout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(middle_button, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(trackpadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(left_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(right_button, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))))
-        );
-
-        jTabbedPane1.addTab("Trackpad", trackpad);
 
         tauletaGrafica.setOpaque(false);
 
@@ -509,14 +432,9 @@ public class Finestra extends javax.swing.JFrame {
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JButton left_button;
-    private javax.swing.JButton middle_button;
-    private javax.swing.JButton right_button;
     private javax.swing.JPanel tauletaGrafica;
-    private javax.swing.JPanel trackpad;
     // End of variables declaration//GEN-END:variables
 }
