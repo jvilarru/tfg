@@ -1,38 +1,32 @@
 package master;
 
-import java.awt.CheckboxGroup;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 public class Master extends JFrame {
     private final String defaultLayout = "layoutES.ser";
-    private boolean tauleta_clicked = false;
-    private DefaultListModel<String> model;
+
+    private Network xarxa;
+
     private ArrayList<Emiter> llista;
     private String name = "Server";
-
-    private DatagramSocket scanSock;
-    private DatagramPacket scanPack;
-    private byte[] scanBuff;
 
     private JTabbedPane tabs;
 
@@ -43,9 +37,11 @@ public class Master extends JFrame {
     private JPanel pOpcions;
     private JButton exitButton;
     private List<JCheckBox> llistaClients;
+    private JButton scan;
 
     public Master() throws IOException {
         super("SER");
+        xarxa = new Network();
         GraphicsDevice gd = getGraphicsConfiguration().getDevice();
         setUndecorated(true);
         setResizable(false);
@@ -75,7 +71,7 @@ public class Master extends JFrame {
                 .addComponent(tabs, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         setName("SER");
-        
+        pack();
         
         Dimension screenSize = getSize();
         screenSize.height-=42;
@@ -119,30 +115,43 @@ public class Master extends JFrame {
             }
         });
         
-        //Llista clients
+        //"Llista" clients
         
-        model = new DefaultListModel<>();
-        model.addElement("alfa");
-        model.addElement("beta");
+//        model = new DefaultListModel<>();
+//        model.addElement("alfa");
+//        model.addElement("beta");
         llistaClients = new ArrayList<>();
         llistaClients.add(new JCheckBox("alfa", false));
         llistaClients.add(new JCheckBox("beta", true));
         llistaClients.add(new JCheckBox("omega", false));
-        int ypos=30;
+        JLabel titol = new JLabel("Client list");
+        titol.setFont(titol.getFont().deriveFont(f));
+        titol.setSize(screenSize.width / 5, 25);
+        titol.setLocation(screenSize.width / 20, 15);
+        pOpcions.add(titol);
+        JSeparator separ = new JSeparator(SwingConstants.HORIZONTAL);
+        separ.setSize(screenSize.width / 5, 10);
+        separ.setLocation(screenSize.width / 25, 40);
+        pOpcions.add(separ);
+        int ypos = 55;
         for (JCheckBox box : llistaClients) {
             box.setSize(screenSize.width/5,30);
             box.setFont(box.getFont().deriveFont(f));
-            box.setLocation(0, ypos);
+            box.setLocation(screenSize.width / 20, ypos);
             ypos+=30;
             
             pOpcions.add(box);
         }
-        
-        JLabel titol= new JLabel("Client list");
-        titol.setFont(titol.getFont().deriveFont(f));
-        titol.setSize(screenSize.width/5,25);
-        titol.setLocation(0, 0);
-        pOpcions.add(titol);
+
+        scan = new JButton("Scan");
+        scan.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scan();
+            }
+        });
+
         pOpcions.setName("Opcions");
         
         //Fi opcions
@@ -195,6 +204,10 @@ public class Master extends JFrame {
             System.exit(0);
         }
         
+    }
+
+    private void scan() {
+        xarxa.scan();
     }
 
 }
