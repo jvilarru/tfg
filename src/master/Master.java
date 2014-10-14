@@ -7,18 +7,17 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Master extends JFrame {
     private final String defaultLayout = "layoutES.ser";
@@ -36,27 +35,25 @@ public class Master extends JFrame {
     
     private JPanel pOpcions;
     private JButton exitButton;
-    private List<JCheckBox> llistaClients;
-    private JButton scan;
+    private boolean transAvaiable;
 
     public Master() throws IOException {
         super("SER");
-        xarxa = new Network();
         GraphicsDevice gd = getGraphicsConfiguration().getDevice();
+        transAvaiable = true;
+        if (!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)){
+            System.err.println("Translucencia no suportada");
+            transAvaiable = false;
+        }
+        
         setUndecorated(true);
         setResizable(false);
-//        if (gd.isFullScreenSupported()) {
-//            System.err.println("fullscreen");
-//            gd.setFullScreenWindow(this);            
-//        } else {
-//            System.err.println("NO fullscreen");
-            setPreferredSize(getGraphicsConfiguration().getBounds().getSize());
-            setExtendedState(JFrame.MAXIMIZED_BOTH);
-            boolean success = (getExtendedState() == JFrame.MAXIMIZED_BOTH);
-            if (!success) {
-                System.err.println("Could not maximize the window");
-            }
-//        }
+        setPreferredSize(getGraphicsConfiguration().getBounds().getSize());
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        boolean success = (getExtendedState() == JFrame.MAXIMIZED_BOTH);
+        if (!success) {
+            System.err.println("Could not maximize the window");
+        }
         setVisible(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         tabs = new JTabbedPane();
@@ -106,7 +103,7 @@ public class Master extends JFrame {
         exitButton.setFont(exitButton.getFont().deriveFont(f));
         exitButton.setSize(screenSize.width/10,screenSize.height/10 );
         pOpcions.add(exitButton);
-        exitButton.setLocation(screenSize.width - screenSize.width/10,0);
+        exitButton.setLocation(screenSize.width - screenSize.width/10 - 50,screenSize.height - screenSize.height/10 -50);
         exitButton.addActionListener(new ActionListener() {
 
             @Override
@@ -114,44 +111,33 @@ public class Master extends JFrame {
                 exitSER(null);
             }
         });
-        
-        //"Llista" clients
-        
-//        model = new DefaultListModel<>();
-//        model.addElement("alfa");
-//        model.addElement("beta");
-        llistaClients = new ArrayList<>();
-        llistaClients.add(new JCheckBox("alfa", false));
-        llistaClients.add(new JCheckBox("beta", true));
-        llistaClients.add(new JCheckBox("omega", false));
-        JLabel titol = new JLabel("Client list");
-        titol.setFont(titol.getFont().deriveFont(f));
-        titol.setSize(screenSize.width / 5, 25);
-        titol.setLocation(screenSize.width / 20, 15);
-        pOpcions.add(titol);
-        JSeparator separ = new JSeparator(SwingConstants.HORIZONTAL);
-        separ.setSize(screenSize.width / 5, 10);
-        separ.setLocation(screenSize.width / 25, 40);
-        pOpcions.add(separ);
-        int ypos = 55;
-        for (JCheckBox box : llistaClients) {
-            box.setSize(screenSize.width/5,30);
-            box.setFont(box.getFont().deriveFont(f));
-            box.setLocation(screenSize.width / 20, ypos);
-            ypos+=30;
-            
-            pOpcions.add(box);
-        }
 
-        scan = new JButton("Scan");
-        scan.addActionListener(new ActionListener() {
+        //xarxa
+        xarxa = new Network(screenSize);
+        pOpcions.add(xarxa);
+        final JFrame Masterframe = this;
+        //slider transparencia
+        JLabel lab = new JLabel("Transparència");
+        lab.setSize(screenSize.width/5, 25);
+        lab.setFont(lab.getFont().deriveFont(f));
+        lab.setLocation(screenSize.width - screenSize.width/5, 50);
+        lab.setEnabled(transAvaiable);
+        pOpcions.add(lab);
+        
+        JSlider slid = new JSlider(0, 100);
+        slid.setSize(screenSize.width/5, screenSize.width/20);
+        slid.setLocation(screenSize.width - screenSize.width/5 - 50, 75);
+        slid.setEnabled(transAvaiable);
+        slid.setValue(0);
+        slid.addChangeListener(new ChangeListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                scan();
+            public void stateChanged(ChangeEvent e) {
+                Masterframe.setOpacity(((JSlider)e.getSource()).getValue()/100f);
             }
         });
-
+        pOpcions.add(slid);
+        
         pOpcions.setName("Opcions");
         
         //Fi opcions
@@ -205,9 +191,4 @@ public class Master extends JFrame {
         }
         
     }
-
-    private void scan() {
-        xarxa.scan();
-    }
-
 }
