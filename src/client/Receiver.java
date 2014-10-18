@@ -4,19 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Receiver implements Runnable {
     private final String server_name;
-    private final Socket sock;
+    private ServerSocket sSock;
+    private Socket sock;
     private boolean running = false;
     private Thread t;
 
-    public Receiver(String server_name, Socket sock) {
-        this.sock = sock;
+    public Receiver(String server_name, int port) throws IOException {
         this.server_name = server_name;
+        sSock =  new ServerSocket(port);
     }
     
     public boolean areYou(String name){
@@ -25,13 +27,13 @@ public class Receiver implements Runnable {
 
     @Override
     public void run() {
+        
         try{
+            sock = sSock.accept();
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            InetAddress localAddress = sock.getLocalAddress();
-            int localPort = sock.getLocalPort();
-            System.out.println("RECEIVER:\n\tName -->" + server_name + "\n\tIp --> " + localAddress.getHostAddress() + ":" + localPort);
             while (running) {
                 String line = in.readLine();
+                //Fer algo mes elaborat
                 if(line.equalsIgnoreCase("STOP")){
                     System.out.println("tanco paradeta");
                     stop();

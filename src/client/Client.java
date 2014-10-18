@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 public class Client {
 
@@ -15,10 +16,15 @@ public class Client {
     public static final int BUFF_LEN = 1024;
     public static int mode;
     public static String name = "Halfonso";
+
+    private void usage() {
+        System.out.println("List of commands avaiable:");
+        System.out.println("\tSTOP\tStops the program.");
+    }
     private Listener list;
-    
 
     public static void main(String args[]) throws IOException {
+        
         Client c;
         if (args.length >= 1 && args[0].equalsIgnoreCase("DEBUG")) {
             mode = DEBUG;
@@ -45,7 +51,7 @@ public class Client {
 
             }
             else {
-                System.out.println("List of commands avaiable:\n\tSTOP:\t It stops the program.\n");
+                c.usage();
             }
         }
     }
