@@ -32,9 +32,8 @@ public class Emiter {
     }
 
     public boolean connect() {
-        System.out.println("soc "+name+" i mestic connectant");
         connected = true;
-        return true;
+        return connected;
 //        if (!connected) {
 //            boolean success = true;
 //            try {
@@ -81,7 +80,7 @@ public class Emiter {
      */
     public void write(int type, int subtype, String Message) {
         if (connected) {
-            out.println(type + ":" + subtype + ":" + Message + "\n");
+            out.println(type + ":" + subtype + ":" + Message);
             out.flush();
         }
     }
