@@ -15,6 +15,30 @@ extern "C" {
 JNIEXPORT jstring JNICALL Java_JNIFoo_nativeFoo
   (JNIEnv *, jobject);
 
+/*
+ * Class:     JNIFoo
+ * Method:    open_term
+ * Signature: ([C)I
+ */
+JNIEXPORT jint JNICALL Java_JNIFoo_open_1term
+  (JNIEnv *, jobject, jcharArray);
+
+/*
+ * Class:     JNIFoo
+ * Method:    write_char
+ * Signature: (IC)I
+ */
+JNIEXPORT jint JNICALL Java_JNIFoo_write_1char
+  (JNIEnv *, jobject, jint, jchar);
+
+/*
+ * Class:     JNIFoo
+ * Method:    close_term
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_JNIFoo_close_1term
+  (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif
