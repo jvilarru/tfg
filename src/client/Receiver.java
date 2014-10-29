@@ -5,8 +5,10 @@ import java.awt.Robot;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +19,13 @@ public class Receiver implements Runnable {
     private boolean running = false;
     private Thread t;
     private Robot rob;
+    
+    private native int open_term(String term);
+    private native int write_char(int fd,char c);
+    private native void close_term(int fd);
+    private int fd;
+    
+    private boolean graphic = true;
 
     public static final int KEYBOARD_TYPE = 0;
     public static final int KEYOBARD_PRESS_SUBTYPE = 0;
@@ -30,13 +39,31 @@ public class Receiver implements Runnable {
     public static final int MOUSE_BUTTON_PRESS_SUBSUBTYPE = 0;
     public static final int MOUSE_BUTTON_RELEASE_SUBSUBTYPE = 1;
 
-    public Receiver(String server_name, int port) throws IOException {
+    public Receiver(String server_name, int port) throws Exception {
         this.server_name = server_name;
         sSock = new ServerSocket(port);
         try {
             rob = new Robot();
         } catch (AWTException ex) {
-            Logger.getLogger(Receiver.class.getName()).log(Level.SEVERE, null, ex);
+            graphic = false;
+            addLibraryPath(System.getProperty("user.dir")+"/native/lib");
+            System.out.println("No graphical interface detected loading the "
+                    + "module located at " +System.getProperty("user.dir")+"/native/lib");
+            System.loadLibrary("tty_inject");
+        }
+    }
+    
+    private void keystroke(char c){
+        if(graphic){
+            
+        }
+        else{
+            fd = open_term("/dev/tty0");
+            if (write_char(fd,c) != 0){
+                System.err.println("Error while injecting " + c + " at the current terminal");
+            }
+            close_term(fd);
+            //TODO: no obrir i tancar cada vegada la terminal?
         }
     }
     
@@ -129,6 +156,26 @@ public class Receiver implements Runnable {
 
     private void error(String line) {
         System.err.println("Error parsing the message " + line);
+    }
+    
+    private void addLibraryPath(String pathToAdd) throws Exception{
+        final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
+        usrPathsField.setAccessible(true);
+
+        //get array of paths
+        final String[] paths = (String[])usrPathsField.get(null);
+
+        //check if the path to add is already present
+        for(String path : paths) {
+            if(path.equals(pathToAdd)) {
+                return;
+            }
+        }
+
+        //add the new path
+        final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+        newPaths[newPaths.length-1] = pathToAdd;
+        usrPathsField.set(null, newPaths);
     }
 
 }
