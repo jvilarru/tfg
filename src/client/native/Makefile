@@ -1,7 +1,8 @@
 NAME=tty_inject
-JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/include
+JAVA_EXE = $(shell readlink -f `which java`)
+JAVA_HOME = $(JAVA_EXE:/jre/bin/java=)
 CC=gcc
-CFLAGS=-shared -fPIC -I$(JAVA_HOME) -I$(JAVA_HOME)/linux
+CFLAGS=-shared -fPIC -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
 LIBNAME=lib$(NAME).so
 SOURCENAME=$(NAME).c
@@ -14,4 +15,3 @@ lib: src/$(SOURCENAME)
 
 clean:
 	rm -rf lib
-
