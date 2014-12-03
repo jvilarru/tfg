@@ -9,8 +9,8 @@
 
 JNIEXPORT jint JNICALL Java_JNIFoo_open_1term (JNIEnv *env, jobject obj, jstring term){
     const char *nativeterm = (*env)->GetStringUTFChars(env,term, NULL);
-	if(nativeterm == NULL){
-        nativeterm = "/dev/tty";
+	if(nativeterm == NULL) {
+        nativeterm = "/dev/tty0";
     }
 	jint fd = open(nativeterm,O_WRONLY);
 	(*env)->ReleaseStringUTFChars(env,term, nativeterm);
