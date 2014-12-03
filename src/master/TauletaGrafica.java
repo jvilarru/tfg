@@ -38,13 +38,13 @@ public class TauletaGrafica extends JPanel{
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("apretat");
+
                 boss.send(1, true, InputEvent.BUTTON1_DOWN_MASK);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("soltat");
+
                 boss.send(1, false, InputEvent.BUTTON1_DOWN_MASK);
             }
 
@@ -72,14 +72,14 @@ public class TauletaGrafica extends JPanel{
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("apretat");
-                boss.send(1, true, InputEvent.BUTTON3_DOWN_MASK);
+
+                boss.send(1, true, InputEvent.BUTTON2_DOWN_MASK);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("soltat");
-                boss.send(1, false, InputEvent.BUTTON3_DOWN_MASK);
+
+                boss.send(1, false, InputEvent.BUTTON2_DOWN_MASK);
             }
 
             @Override
@@ -106,14 +106,14 @@ public class TauletaGrafica extends JPanel{
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("apretat");
-                boss.send(1, true, InputEvent.BUTTON2_DOWN_MASK);
+
+                boss.send(1, true, InputEvent.BUTTON3_DOWN_MASK);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("soltat");
-                boss.send(1, false, InputEvent.BUTTON2_DOWN_MASK);
+
+                boss.send(1, false, InputEvent.BUTTON3_DOWN_MASK);
             }
 
             @Override
