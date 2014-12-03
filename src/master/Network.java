@@ -77,7 +77,7 @@ public class Network extends JPanel{
         InetAddress add = Inet4Address.getByName(IP);
         InetSocketAddress inetSocketAddress = new InetSocketAddress(add, port);
         demo = new Emiter(inetSocketAddress, locName);
-//        demo.demo();
+        demo.demo();
     }
     
     public void sendKeyboardDemo(int ID, boolean pressed, int keycode){

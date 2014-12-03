@@ -53,6 +53,8 @@ public class Emiter {
     public void demo() throws IOException {
         sock.connect(addr);
         out = new PrintStream(sock.getOutputStream());
+        out.println("Hola soc en " + name);
+        out.flush();
         
     }
 
@@ -65,8 +67,8 @@ public class Emiter {
     }
     
     public void demoWrite(String message){
-//        out.println(message);
-//        out.flush();
+        out.println(message);
+        out.flush();
         System.out.println(message);
     }
 
