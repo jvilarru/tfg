@@ -42,14 +42,15 @@ public class Receiver implements Runnable {
     public Receiver(String server_name, int port) throws Exception {
         this.server_name = server_name;
         sSock = new ServerSocket(port);
+        System.out.println("Listening on port "+ port);
         try {
             rob = new Robot();
         } catch (AWTException ex) {
-            graphic = false;
-            addLibraryPath(System.getProperty("user.dir")+"/native/lib");
+//            graphic = false;
+//            addLibraryPath(System.getProperty("user.dir")+"/native/lib");
             System.out.println("No graphical interface detected loading the "
                     + "module located at " +System.getProperty("user.dir")+"/native/lib");
-            System.loadLibrary("tty_inject");
+//            System.loadLibrary("tty_inject");
         }
     }
     
@@ -79,52 +80,53 @@ public class Receiver implements Runnable {
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             while (running) {
                 String line = in.readLine();
-
+                System.out.println(line);
+                
                 //Fer algo mes elaborat
-                if(line.equalsIgnoreCase("STOP")){
-                    System.out.println("tanco paradeta");
-                    reboot();
-                }
-                else {//Parsing and execution
-//                    System.out.println("He llegit lo següent--> " + line);
-                    String[] split = line.split(":");
-                    int type = Integer.parseInt(split[0]);
-                    int subtype = Integer.parseInt(split[1]);
-                    if (type == KEYBOARD_TYPE) {
-                        int keycode = Integer.parseInt(split[2]);
-                        if (subtype == KEYOBARD_PRESS_SUBTYPE) {
-                            rob.keyPress(keycode);
-                        } else if (subtype == KEYOBARD_RELEASE_SUBTYPE) {
-                            rob.keyRelease(keycode);
-                        } else {
-                            error(line);
-                        }
-                    } else if (type == MOUSE_TYPE) {
-                        int subsubtype = Integer.parseInt(split[2]);
-                        if (subtype == MOUSE_MOVE_SUBTYPE) {
-                            if (subsubtype == MOUSE_MOVE_ABS_SUBSUBTYPE) {
-                                //veure com ho fem per pillar dimensions pantalla
-                            } else if (subsubtype == MOUSE_MOVE_REL_SUBSUBTYPE) {
-
-                            } else {
-                                error(line);
-                            }
-                        } else if (subtype == MOUSE_BUTTON_SUBTYPE) {
-                            int button = Integer.parseInt(split[3]);
-                            if (subsubtype == MOUSE_BUTTON_PRESS_SUBSUBTYPE) {
-                                //mirar com van els butons de JAVa
-                            } else if (subsubtype == MOUSE_BUTTON_RELEASE_SUBSUBTYPE) {
-
-                            } else {
-                                error(line);
-                            }
-                        } else {
-                            error(line);
-                        }
-
-                    } else
-                        error(line);
-                }
+//                if(line.equalsIgnoreCase("STOP")){
+//                    System.out.println("tanco paradeta");
+//                    reboot();
+//                }
+//                else {//Parsing and execution
+////                    System.out.println("He llegit lo següent--> " + line);
+//                    String[] split = line.split(":");
+//                    int type = Integer.parseInt(split[0]);
+//                    int subtype = Integer.parseInt(split[1]);
+//                    if (type == KEYBOARD_TYPE) {
+//                        int keycode = Integer.parseInt(split[2]);
+//                        if (subtype == KEYOBARD_PRESS_SUBTYPE) {
+//                            rob.keyPress(keycode);
+//                        } else if (subtype == KEYOBARD_RELEASE_SUBTYPE) {
+//                            rob.keyRelease(keycode);
+//                        } else {
+//                            error(line);
+//                        }
+//                    } else if (type == MOUSE_TYPE) {
+//                        int subsubtype = Integer.parseInt(split[2]);
+//                        if (subtype == MOUSE_MOVE_SUBTYPE) {
+//                            if (subsubtype == MOUSE_MOVE_ABS_SUBSUBTYPE) {
+//                                //veure com ho fem per pillar dimensions pantalla
+//                            } else if (subsubtype == MOUSE_MOVE_REL_SUBSUBTYPE) {
+//
+//                            } else {
+//                                error(line);
+//                            }
+//                        } else if (subtype == MOUSE_BUTTON_SUBTYPE) {
+//                            int button = Integer.parseInt(split[3]);
+//                            if (subsubtype == MOUSE_BUTTON_PRESS_SUBSUBTYPE) {
+//                                //mirar com van els butons de JAVa
+//                            } else if (subsubtype == MOUSE_BUTTON_RELEASE_SUBSUBTYPE) {
+//
+//                            } else {
+//                                error(line);
+//                            }
+//                        } else {
+//                            error(line);
+//                        }
+//
+//                    } else
+//                        error(line);
+//                }
             }
             
         }

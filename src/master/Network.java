@@ -59,7 +59,7 @@ public class Network extends JPanel{
         add(boto);
     }
 
-    public void demo() throws IOException {
+    public void demo(String IP) throws IOException {
         
 //        int port = 42;
 //        String locName = "Halfonso";
@@ -74,7 +74,7 @@ public class Network extends JPanel{
 //        e3.connect();
         int port = 8888;
         String locName = "Halfonso";
-        InetAddress add = Inet4Address.getByName("10.42.0.1");
+        InetAddress add = Inet4Address.getByName(IP);
         InetSocketAddress inetSocketAddress = new InetSocketAddress(add, port);
         demo = new Emiter(inetSocketAddress, locName);
 //        demo.demo();

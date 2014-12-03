@@ -23,6 +23,7 @@ public class Master extends JFrame {
     private final String defaultLayout = "layoutES.ser";
 
     private Network xarxa;
+    private static String IP;
 
     private ArrayList<Emiter> llista;
     private String name = "Server";
@@ -159,7 +160,7 @@ public class Master extends JFrame {
         tabs.setEnabledAt(3, false);
 
 //        tabs.setSelectedIndex(3);//temporal per a veure millor la pantalla opcions
-        xarxa.demo();
+        xarxa.demo(IP);
         pack();
 
     }
@@ -180,7 +181,7 @@ public class Master extends JFrame {
 //            java.util.logging.Logger.getLogger(Master.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
         //</editor-fold>
-
+        IP = args[0];
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

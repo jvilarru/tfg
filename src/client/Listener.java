@@ -24,7 +24,9 @@ public class Listener implements Runnable {
 
     public Listener() {
         llistaReceivers = new ArrayList<>();
-        port = Client.port+1;
+//        port = Client.port+1;
+        port = Client.port;
+
     }
 
     public void stop() throws IOException {
@@ -37,8 +39,14 @@ public class Listener implements Runnable {
 
     public void start() {
         running = true;
-        t = new Thread(this);
-        t.start();
+        try {
+            //        t = new Thread(this);
+//        t.start();
+            Receiver r = new Receiver("PiPad", port);
+            r.start();
+        } catch (Exception ex) {
+            Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
