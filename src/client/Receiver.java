@@ -1,7 +1,9 @@
 package client;
 
 import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -81,8 +83,9 @@ public class Receiver implements Runnable {
             while (running) {
                 String line = in.readLine();
                 System.out.println(line);
+                if(line.contains(":")){
                 
-                String[] split = line.split(":");
+                    String[] split = line.split(":");
                     int type = Integer.parseInt(split[0]);
                     
                     if (type == KEYBOARD_TYPE) {
@@ -94,6 +97,32 @@ public class Receiver implements Runnable {
                             rob.keyRelease(keycode);
                         }
                     }
+                    else if (type == MOUSE_TYPE){
+                        int subtype = Integer.parseInt(split[1]);
+                        if(subtype == 0){
+                            float x=Float.parseFloat(split[3]);
+                            float y=Float.parseFloat(split[4]);
+                            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                            double width = screenSize.getWidth();
+                            double height = screenSize.getHeight();
+                            rob.mouseMove((int)(width*x),(int) (width*y));
+                        }
+                        else if(subtype==1){
+                            int botons = Integer.parseInt(split[3]);
+                            if (split[2].equals("true")){
+                                System.out.println("boto apretat");
+                                rob.mousePress(botons);
+                            }
+                            else{
+                                System.out.println("boto deixat anar");
+                                rob.mouseRelease(botons);
+                            }
+                        }
+                        else {
+                            error(line);
+                        }
+                    }
+                }
 //                    } else if (type == MOUSE_TYPE) {
 //                        int subtype = Integer.parseInt(split[1]);
 //                        int subsubtype = Integer.parseInt(split[2]);

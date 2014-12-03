@@ -86,7 +86,7 @@ public class Network extends JPanel{
     }
     
     public void sendPositionDemo(int ID,float x,float y){
-        String send = ID + ":0:0" + x + ":" + y;
+        String send = ID + ":0:0:" + x + ":" + y;
         demo.demoWrite(send);
     }
     
