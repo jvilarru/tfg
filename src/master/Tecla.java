@@ -1,15 +1,20 @@
 package master;
 
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -22,9 +27,9 @@ public class Tecla extends JButton implements ActionListener {
 //    public static float minFontSize = (float) 200.0;
     public static float minFontSize[];
 
-    private char content;
-    private char shiftContent;
-    private char altContent;
+    private int content;
+    private int shiftContent;
+    private int altContent;
     
     private String title;
     private String altTitle;
@@ -35,10 +40,13 @@ public class Tecla extends JButton implements ActionListener {
     private Dimension minSize;
 
     private ImageIcon icona;
+    
+    private Teclat jefe;
 
     private long clickStart;
 
-    public Tecla(String lineToParse, Dimension size, Point position, int fila) {
+    public Tecla(String lineToParse, Dimension size, Point position, int fila,final Teclat jefe) {
+        this.jefe = jefe;
         addActionListener(this);
         clickStart = -1;
         icona = null;
@@ -46,34 +54,27 @@ public class Tecla extends JButton implements ActionListener {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                clickStart = System.currentTimeMillis();
+                jefe.send(content, true);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (clickStart != -1) {
-                    long ts = System.currentTimeMillis();
-                    long diferencia = ts - clickStart;
-                    if (diferencia >= 2000) {
-                        System.out.println("ts= " + ts + " click llarg -> " + ((diferencia) / 1000.0) + " s");
-                    }
-                    clickStart = -1;
-                }
+                jefe.send(content, false);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-
+                
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-
+                
             }
         });
         setFocusable(false);
@@ -119,9 +120,9 @@ public class Tecla extends JButton implements ActionListener {
             Tecla.minFontSize[max.length()] = sizefont;
         }
         //de moment
-        content = (char) Integer.parseInt(splited[3]);
-        shiftContent = (char) Integer.parseInt(splited[4]);
-        altContent = (char) Integer.parseInt(splited[5]);
+        content = Integer.parseInt(splited[3]);
+        shiftContent = Integer.parseInt(splited[4]);
+        altContent = Integer.parseInt(splited[5]);
     }
     
     private void modifierKey() {
@@ -168,7 +169,6 @@ public class Tecla extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //TODO fer algo mes
-        System.out.println(content);
+        
     }
 }

@@ -78,13 +78,14 @@ public class Master extends JFrame {
         float f = 25;
         tabs.setFont(tabs.getFont().deriveFont(f));
 
-        teclat = new Teclat(defaultLayout, screenSize);
+        teclat = new Teclat(defaultLayout, screenSize,this);
         trackpad = new Trackpad(screenSize);
-        tgrafica = new TauletaGrafica(screenSize);
+        tgrafica = new TauletaGrafica(screenSize,this);
         
 
         tabs.add(teclat);
         tabs.add(trackpad);
+        tabs.setEnabledAt(1, false);
         tabs.add(tgrafica);
         
         tabs.setSelectedIndex(0);
@@ -142,8 +143,23 @@ public class Master extends JFrame {
         
         //Fi opcions
         tabs.add(pOpcions);
-        tabs.setSelectedIndex(3);//temporal per a veure millor la pantalla opcions
-        
+        JPanel close = new JPanel();
+        close.setName("X");
+        tabs.add(close);
+        ChangeListener changeListener = new ChangeListener() {
+            public void stateChanged(ChangeEvent changeEvent) {
+              JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+              int index = sourceTabbedPane.getSelectedIndex();
+              if(index==4){
+                  System.exit(1);
+              }
+            }
+        };
+        tabs.addChangeListener(changeListener);
+        tabs.setEnabledAt(3, false);
+
+//        tabs.setSelectedIndex(3);//temporal per a veure millor la pantalla opcions
+        xarxa.demo();
         pack();
 
     }
@@ -190,5 +206,18 @@ public class Master extends JFrame {
             System.exit(0);
         }
         
+    }
+
+    public void send(int ID, boolean pressed, int keycode) {
+        if(ID==0){//TECLAT
+            xarxa.sendKeyboardDemo(ID, pressed, keycode);
+        }
+        if(ID==1){//Tauleta
+            xarxa.sendbuttonsDemo(ID, pressed, keycode);
+        }
+    }
+    
+    public void send(int ID, float x, float y) {
+        xarxa.sendPositionDemo(ID, x, y);
     }
 }

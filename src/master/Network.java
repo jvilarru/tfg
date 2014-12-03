@@ -4,10 +4,14 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
@@ -21,6 +25,7 @@ import javax.swing.SwingConstants;
 public class Network extends JPanel{
 
     private ArrayList<Emiter> llistaClients;
+    private Emiter demo;
     private final int width;
 
     public Network(Dimension screenSize) {
@@ -54,28 +59,65 @@ public class Network extends JPanel{
         add(boto);
     }
 
-    public void test() throws IOException {
+    public void demo() throws IOException {
         
-        int port = 42;
+//        int port = 42;
+//        String locName = "Halfonso";
+//        InetAddress add = Inet4Address.getByName("192.168.0.1");
+//        InetSocketAddress inetSocketAddress = new InetSocketAddress(add, port);
+//        Emiter e = new Emiter(inetSocketAddress, locName);
+//        llistaClients.add(e);
+//        Emiter e2 = new Emiter(inetSocketAddress, "Halfonso2");
+//        llistaClients.add(e2);
+//        Emiter e3 = new Emiter(inetSocketAddress, "Halfonso3");
+//        llistaClients.add(e3);
+//        e3.connect();
+        int port = 8888;
         String locName = "Halfonso";
-        InetAddress add = Inet4Address.getByName("192.168.0.1");
+        InetAddress add = Inet4Address.getByName("10.42.0.1");
         InetSocketAddress inetSocketAddress = new InetSocketAddress(add, port);
-        Emiter e = new Emiter(inetSocketAddress, locName);
-        llistaClients.add(e);
-        Emiter e2 = new Emiter(inetSocketAddress, "Halfonso2");
-        llistaClients.add(e2);
-        Emiter e3 = new Emiter(inetSocketAddress, "Halfonso3");
-        llistaClients.add(e3);
-        e3.connect();
+        demo = new Emiter(inetSocketAddress, locName);
+//        demo.demo();
+    }
+    
+    public void sendKeyboardDemo(int ID, boolean pressed, int keycode){
+        String send = ID + ":" + pressed + ":" + keycode;
+        demo.demoWrite(send);
+    }
+    
+    public void sendPositionDemo(int ID,float x,float y){
+        String send = ID + ":0:0" + x + ":" + y;
+        demo.demoWrite(send);
+    }
+    
+    public void sendbuttonsDemo(int ID, boolean pressed, int boto){
+        String send = ID + ":1:" + pressed + ":" + boto;
+        demo.demoWrite(send);
+    }
+    
+    public InetAddress getNetworkLocalBroadcastAddressdAsInetAddress() throws IOException {
+        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            NetworkInterface intf = en.nextElement();
+            InetAddress addr = intf.getInetAddresses().nextElement();
+            if(!addr.isLoopbackAddress()){              
+                byte[] quads = addr.getAddress();
+                quads[0] = (byte)255;
+                quads[1] = (byte)255;
+                return InetAddress.getByAddress(quads);
+            }
+        }
+        return null;
     }
     
     private void scan() {
-        try {
-            test();
-        } catch (IOException ex) {
-            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+//        try {
+////            test();
+//        } catch (IOException ex) {
+//            Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        DatagramSocket sock;
+//        IPAdress.Broadcast;
+//        SocketAddress saddr = new InetSocketAddress(new Inet4Address, WIDTH)
         //omplir llista Emiters
         populate();
         repaint();

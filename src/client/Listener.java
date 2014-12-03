@@ -95,6 +95,8 @@ public class Listener implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
+        } catch (Exception ex) {
+            Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

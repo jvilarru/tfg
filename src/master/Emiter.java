@@ -49,6 +49,12 @@ public class Emiter {
 //            return false;
 //        }
     }
+    
+    public void demo() throws IOException {
+        sock.connect(addr);
+        out = new PrintStream(sock.getOutputStream());
+        
+    }
 
     public String getName() {
         return name;
@@ -56,6 +62,12 @@ public class Emiter {
 
     public boolean amI(String name) {
         return this.name.equals(name);
+    }
+    
+    public void demoWrite(String message){
+//        out.println(message);
+//        out.flush();
+        System.out.println(message);
     }
 
     /**

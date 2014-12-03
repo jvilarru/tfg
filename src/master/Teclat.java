@@ -18,12 +18,15 @@ public class Teclat extends JPanel {
         public Tecla tecla;
     }
 
+    private static final int ID=0;
     private ArrayList<ArrayList<rawData>> matriu = new ArrayList<>();
     private int i;        
     private ArrayList<Double> tamanys = new ArrayList<>();
+    private Master boss;
 
-    public Teclat(String layout, Dimension dim) throws IOException {
+    public Teclat(String layout, Dimension dim,Master boss) throws IOException {
         super();
+        this.boss = boss;
         setName("Teclat");
         setSize(dim);
         setPreferredSize(dim);
@@ -85,7 +88,7 @@ public class Teclat extends JPanel {
                 if (!linia1.datos.equals("EMPTY")) {
                     Dimension dim = new Dimension((int) ((screenSize.width / width_size) * linia1.relWidth), (int) ((screenSize.height / num_files) * linia1.relHeight));
                     Point p = new Point((int) (accum * (screenSize.width / width_size)), i * (screenSize.height / num_files));
-                    linia1.tecla = new Tecla(linia1.datos, dim, p, i);
+                    linia1.tecla = new Tecla(linia1.datos, dim, p, i,this);
                     add(linia1.tecla);
                 }
                 accum += linia1.relWidth;
@@ -99,5 +102,8 @@ public class Teclat extends JPanel {
                 }
             }
         }
+    }
+    public void send(int keycode,boolean pressed){
+        boss.send(ID,pressed,keycode);
     }
 }
