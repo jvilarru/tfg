@@ -82,6 +82,66 @@ public class Receiver implements Runnable {
                 String line = in.readLine();
                 System.out.println(line);
                 
+                String[] split = line.split(":");
+                    int type = Integer.parseInt(split[0]);
+                    
+                    if (type == KEYBOARD_TYPE) {
+                        int keycode = Integer.parseInt(split[2]);
+                        if (split[1].equalsIgnoreCase("true")){
+                            rob.keyPress(keycode);
+                        }
+                        else{
+                            rob.keyRelease(keycode);
+                        }
+                    }
+//                    } else if (type == MOUSE_TYPE) {
+//                        int subtype = Integer.parseInt(split[1]);
+//                        int subsubtype = Integer.parseInt(split[2]);
+//                        if (subtype == MOUSE_MOVE_SUBTYPE) {
+//                            if (subsubtype == MOUSE_MOVE_ABS_SUBSUBTYPE) {
+//                                //veure com ho fem per pillar dimensions pantalla
+//                            } else if (subsubtype == MOUSE_MOVE_REL_SUBSUBTYPE) {
+//
+//                            } else {
+//                                error(line);
+//                            }
+//                        } else if (subtype == MOUSE_BUTTON_SUBTYPE) {
+//                            int button = Integer.parseInt(split[3]);
+//                            if (subsubtype == MOUSE_BUTTON_PRESS_SUBSUBTYPE) {
+//                                //mirar com van els butons de JAVa
+//                            } else if (subsubtype == MOUSE_BUTTON_RELEASE_SUBSUBTYPE) {
+//
+//                            } else {
+//                                error(line);
+//                            }
+//                        } else {
+//                            error(line);
+//                        }
+//
+//                    } else {
+//                        error(line);
+//                    }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 //Fer algo mes elaborat
 //                if(line.equalsIgnoreCase("STOP")){
 //                    System.out.println("tanco paradeta");
