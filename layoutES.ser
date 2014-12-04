@@ -25,7 +25,7 @@ NEWLINE
 0,=,},13,13,13;1,1
 ',?,\,13,13,13;1,1
 ¡,¿,~,13,13,13;1,1
-←,←,←,13,13,13;1.5,1
+Backspace,Backspace,Backspace,13,13,13;1.5,1
 NEWLINE
 Tab,Tab,Tab,13,13,13;1.5,1
 q,Q,@,13,13,13;1,1
@@ -70,7 +70,7 @@ m,M,µ,13,13,13;1,1
 \,<;<─<13<13<13>1<1
 .,:,·,13,13,13;1,1
 -,_,-,13,13,13;1,1
-↑,↑,↑,38,38,38;1,1
+up,up,up,38,38,38;1,1
 Shift,Shift,Shift,16,16,16;1,1
 Supr,Supr,Supr,16,16,16;1,1
 NEWLINE
@@ -81,9 +81,9 @@ Alt,Alt,Alt,13,13,13;1,1
 Space,Space,Space,13,13,13;5.5,1
 AltGr,AltGr,AltGr,16,16,16;1,1
 Ctrl,Ctrl,Ctrl,13,13,13;1,1
-←,←,←,37,37,37;1,1
-↓,↓,↓,40,40,40;1,1
-→,→,→,39,39,39;1,1
+left,left,left,37,37,37;1,1
+down,down,down,40,40,40;1,1
+right,right,right,39,39,39;1,1
 Win,Win,Win,13,13,13;1,1
 NEWLINE
 Inicio,Inicio,Inicio,13,13,13;1,1

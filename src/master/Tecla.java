@@ -96,7 +96,22 @@ public class Tecla extends JButton implements ActionListener {
             icona = new ImageIcon("images/win.png");
         } else if (title.equalsIgnoreCase("shift")) {
             icona = new ImageIcon("images/shift.png");
+        }else if (title.equalsIgnoreCase("left")) {
+            icona = new ImageIcon("images/left.png");
+        }else if (title.equalsIgnoreCase("right")) {
+            icona = new ImageIcon("images/right.png");
+        }else if (title.equalsIgnoreCase("up")) {
+            icona = new ImageIcon("images/up.png");
+        }else if (title.equalsIgnoreCase("down")) {
+            icona = new ImageIcon("images/down.png");
+        }else if (title.equalsIgnoreCase("Tab")) {
+            icona = new ImageIcon("images/tab.png");
+        }else if (title.equalsIgnoreCase("Backspace")) {
+            icona = new ImageIcon("images/backspace.png");
+        }else if (title.equalsIgnoreCase("Intro")) {
+            icona = new ImageIcon("images/intro.png");
         }
+        
         
         if (icona != null) {
             setText("");
